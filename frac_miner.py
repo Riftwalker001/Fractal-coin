@@ -245,7 +245,7 @@ if __name__ == "__main__":
     parser.add_argument("--rpc-url", default="https://mainnet.base.org", help="Base Mainnet JSON-RPC URL")
     parser.add_argument(
         "--contract",
-        default="0x8F92de279E8f942Cb4E37F3A207A221CB5566C04",
+        default="your miner address",
         help="Official FractalPoWToken (FRAC) contract address on Base Mainnet",
     )
     parser.add_argument("--private-key", default="", help="Miner wallet private key (or set FRAC_PRIVATE_KEY env var)")
