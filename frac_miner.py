@@ -235,6 +235,24 @@ def do_withdraw_to(rpc_url: str, contract: str, private_key: str, recipient: str
     print_wallet_status(rpc_url, contract, miner_addr)
 
 
+def do_stake(rpc_url: str, contract: str, private_key: str, amount_frac: float = 0.0) -> None:
+    miner_addr = get_address_from_key(private_key)
+    b = get_wallet_balances(rpc_url, contract, miner_addr)
+    if b["liquid_frac"] <= 0:
+        print(f"  [!] Error: No liquid FRAC available in {miner_addr} to stake.")
+        return
+    if amount_frac <= 0 or amount_frac >= b["liquid_frac"]:
+        target_amount = b["liquid_frac"]
+    else:
+        target_amount = amount_frac
+
+    amt_wei = str(int(target_amount * 1e18))
+    print(f"  [+] Staking {target_amount:,.2f} FRAC from {miner_addr} into Loyalty Pool...")
+    tx_hash = cast_send(rpc_url, private_key, contract, "stake(uint256)", amt_wei)
+    print(f"  [✓] Staked successfully! Tx: {tx_hash[:18]}...\n")
+    print_wallet_status(rpc_url, contract, miner_addr)
+
+
 def interactive_menu(rpc_url: str, contract: str, private_key: str) -> None:
     miner_addr = get_address_from_key(private_key)
     while True:
@@ -243,13 +261,14 @@ def interactive_menu(rpc_url: str, contract: str, private_key: str) -> None:
         print("  \033[92m[1]\033[0m ⛏  Start 24/7 Mining (Auto-Stake to Loyalty Pool)")
         print("  \033[93m[2]\033[0m ⚡ Start 24/7 Mining (Direct Liquid Wallet Payout)")
         print("  \033[93m[3]\033[0m 💰 Claim Pending Staking Rewards to Wallet")
-        print("  \033[96m[4]\033[0m 🔓 Unstake FRAC from Loyalty Pool to Wallet")
-        print("  \033[92m[5]\033[0m 🚀 Withdraw / Send Liquid FRAC to Another Wallet (MetaMask / Cold Storage)")
-        print("  \033[94m[6]\033[0m 🔄 Refresh Balances")
+        print("  \033[92m[4]\033[0m 📥 Stake Liquid FRAC into Loyalty Pool (Custom Amount or ALL)")
+        print("  \033[96m[5]\033[0m 🔓 Unstake FRAC from Loyalty Pool to Wallet (Custom Amount or ALL)")
+        print("  \033[95m[6]\033[0m 🚀 Withdraw / Send Liquid FRAC to Another Wallet (MetaMask / Cold Storage)")
+        print("  \033[94m[7]\033[0m 🔄 Refresh Balances")
         print("  \033[90m[0]\033[0m ❌ Exit")
         print("\033[96m" + "-" * 68 + "\033[0m")
         try:
-            choice = input("  Enter choice [0-6]: ").strip()
+            choice = input("  Enter choice [0-7]: ").strip()
         except (KeyboardInterrupt, EOFError):
             print("\nExiting.")
             break
@@ -262,12 +281,18 @@ def interactive_menu(rpc_url: str, contract: str, private_key: str) -> None:
             do_claim_rewards(rpc_url, contract, private_key)
             input("\nPress Enter to continue...")
         elif choice == "4":
+            print(f"  Current liquid balance: {b['liquid_frac']:,.2f} FRAC")
+            amt_in = input("  Enter amount of FRAC to stake [Press Enter for ALL]: ").strip().lower()
+            amt_val = 0.0 if amt_in in ("", "all") else float(amt_in)
+            do_stake(rpc_url, contract, private_key, amt_val)
+            input("\nPress Enter to continue...")
+        elif choice == "5":
             print(f"  Current staked balance: {b['staked_frac']:,.2f} FRAC")
             amt_in = input("  Enter amount of FRAC to unstake [Press Enter for ALL]: ").strip().lower()
             amt_val = 0.0 if amt_in in ("", "all") else float(amt_in)
             do_unstake(rpc_url, contract, private_key, amt_val)
             input("\nPress Enter to continue...")
-        elif choice == "5":
+        elif choice == "6":
             print(f"  Current liquid balance: {b['liquid_frac']:,.2f} FRAC")
             recipient = input("  Enter destination wallet address (0x...): ").strip()
             if recipient:
@@ -275,7 +300,7 @@ def interactive_menu(rpc_url: str, contract: str, private_key: str) -> None:
                 amt_val = 0.0 if amt_in in ("", "all") else float(amt_in)
                 do_withdraw_to(rpc_url, contract, private_key, recipient, amt_val)
             input("\nPress Enter to continue...")
-        elif choice == "6":
+        elif choice == "7":
             continue
         elif choice in ("0", "q", "quit", "exit"):
             print("Exiting.")
@@ -394,6 +419,7 @@ if __name__ == "__main__":
     parser.add_argument("--auto-stake", action="store_true", help="Call mineAndStake() to auto-compound rewards")
     parser.add_argument("--status", action="store_true", help="Display miner wallet balances & rewards and exit")
     parser.add_argument("--claim-rewards", action="store_true", help="Claim all pending staking rewards to miner wallet")
+    parser.add_argument("--stake", nargs="?", const="all", default=None, help="Stake liquid FRAC into loyalty pool (e.g. --stake 50 or --stake all)")
     parser.add_argument("--unstake", nargs="?", const="all", default=None, help="Unstake FRAC from loyalty pool (e.g. --unstake 50 or --unstake all)")
     parser.add_argument("--withdraw-to", default="", help="Destination wallet address to send liquid FRAC to (e.g. --withdraw-to 0x...)")
     parser.add_argument("--amount", default="all", help="Amount of FRAC to withdraw (default: all)")
@@ -415,6 +441,12 @@ if __name__ == "__main__":
 
     if args.claim_rewards:
         do_claim_rewards(args.rpc_url, args.contract, priv_key)
+        sys.exit(0)
+
+    if args.stake is not None:
+        amt_str = args.stake.strip().lower()
+        amt_val = 0.0 if amt_str in ("", "all") else float(amt_str)
+        do_stake(args.rpc_url, args.contract, priv_key, amt_val)
         sys.exit(0)
 
     if args.unstake is not None:
