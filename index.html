@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fractal Coin (FRAC) — Official Trader, Staking & Miner Hub</title>
+<link rel="icon" type="image/png" href="FRAC_Logo.png">
+<style>
+  :root {
+    --bg: #09090d;
+    --card: #121218;
+    --border: #22222d;
+    --red: #ff2a4b;
+    --red-glow: rgba(255, 42, 75, 0.25);
+    --gold: #ffc400;
+    --cyan: #00e5ff;
+    --green: #00e676;
+    --text: #e0e0e6;
+    --muted: #888899;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace, sans-serif;
+    line-height: 1.5;
+    padding: 20px;
+  }
+  .container { max-width: 1080px; margin: 0 auto; }
+  
+  /* HEADER */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand img { width: 54px; height: 54px; border-radius: 50%; box-shadow: 0 0 16px var(--red-glow); }
+  .brand h1 { font-size: 24px; color: #fff; letter-spacing: 0.5px; }
+  .brand h1 span { color: var(--red); }
+  .brand p { font-size: 13px; color: var(--muted); }
+
+  .nav-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  button, .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--red); color: #fff; box-shadow: 0 0 12px var(--red-glow); }
+  .btn-primary:hover { background: #ff4763; }
+  .btn-gold { background: #1a1600; color: var(--gold); border-color: var(--gold); }
+  .btn-gold:hover { background: var(--gold); color: #000; }
+  .btn-outline { background: #171720; color: var(--text); border-color: var(--border); }
+  .btn-outline:hover { border-color: var(--muted); background: #20202c; }
+
+  /* PERKS BANNER */
+  .perks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+    margin: 22px 0;
+  }
+  .perk-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .perk-card.red { border-color: rgba(255, 42, 75, 0.4); }
+  .perk-card.gold { border-color: rgba(255, 196, 0, 0.4); }
+  .perk-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .perk-title.red { color: var(--red); }
+  .perk-title.gold { color: var(--gold); }
+  .perk-title.cyan { color: var(--cyan); }
+  .perk-desc { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+
+  /* STATS GRID */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 18px;
+    margin-bottom: 22px;
+  }
+  .box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .box.glow-gold { border-color: rgba(255, 196, 0, 0.35); box-shadow: 0 0 14px rgba(255, 196, 0, 0.08); }
+  .box.glow-red { border-color: rgba(255, 42, 75, 0.35); box-shadow: 0 0 14px var(--red-glow); }
+  .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .val { font-size: 26px; font-weight: 800; margin: 4px 0 10px 0; font-family: monospace; }
+
+  /* INPUT & ACTION ROWS */
+  .input-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  input {
+    flex: 1;
+    min-width: 140px;
+    background: #09090d;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: #fff;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  input:focus { outline: none; border-color: var(--red); }
+
+  /* STATUS MESSAGE */
+  .status-msg {
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    display: none;
+  }
+  .status-msg.info { background: #0b1a24; border: 1px solid var(--cyan); color: var(--cyan); display: block; }
+  .status-msg.success { background: #0c2014; border: 1px solid var(--green); color: var(--green); display: block; }
+  .status-msg.error { background: #260d13; border: 1px solid var(--red); color: var(--red); display: block; }
+
+  /* MINER SECTION */
+  .miner-box {
+    background: #0d0d14;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px;
+    margin-bottom: 22px;
+  }
+  pre {
+    background: #050508;
+    border: 1px solid #1a1a24;
+    padding: 12px;
+    border-radius: 6px;
+    color: #99ffaa;
+    font-size: 12.5px;
+    overflow-x: auto;
+    margin: 10px 0;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding-top: 24px;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+  footer a { color: var(--cyan); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <img src="FRAC_Logo.png" alt="FRAC Logo">
+      <div>
+        <h1>FRACTAL <span>COIN</span> (FRAC)</h1>
+        <p>Base Mainnet (Chain ID 8453) • 0% Tax • 21M Capped Proof-of-Work</p>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button id="connectBtn" class="btn-primary" onclick="connectWallet()">Connect MetaMask</button>
+      <button class="btn-gold" onclick="addTokenToMetaMask()">+ Add to Wallet</button>
+      <a class="btn btn-outline" href="https://app.uniswap.org/swap?chain=base&outputCurrency=0x8F92de279E8f942Cb4E37F3A207A221CB5566C04" target="_blank">Swap on Uniswap</a>
+    </div>
+  </header>
+
+  <div id="statusBanner" class="status-msg"></div>
+
+  <!-- VALUE PROPOSITIONS -->
+  <div class="perks-grid">
+    <div class="perk-card red">
+      <div class="perk-title red">✓ 0% BUY / SELL TAX</div>
+      <div class="perk-desc">100% pure, unmodified OpenZeppelin ERC-20 transfers. Zero hidden fees, zero blacklists, scanner verified on BaseScan.</div>
+    </div>
+    <div class="perk-card gold">
+      <div class="perk-title gold">★ 1-IN-64 GOLDEN JACKPOT</div>
+      <div class="perk-desc">Every block has a 1-in-64 chance to trigger the Golden Block, instantly paying out <strong>80% of the Jackpot</strong> to the winner!</div>
+    </div>
+    <div class="perk-card">
+      <div class="perk-title cyan">◆ 3.5% STAKING DIVIDEND</div>
+      <div class="perk-desc">Stake FRAC with <strong>zero lockup</strong>. Every single block mined worldwide distributes 1.75 FRAC directly to all stakers.</div>
+    </div>
+    <div class="perk-card">
+      <div class="perk-title" style="color:var(--green);">⚙ OLD-PC CPU MINING</div>
+      <div class="perk-desc">Sequential-64 Keccak-256 sponge chain + 5-minute fairness cooldown prevents ASIC/GPU dominance on commodity PCs.</div>
+    </div>
+  </div>
+
+  <!-- LIVE ON-CHAIN STATS -->
+  <div class="grid-2">
+    <!-- GOLDEN JACKPOT -->
+    <div class="box glow-gold">
+      <div class="label" style="color:var(--gold);">★ Fractal Golden Block Jackpot (80/20 Rollover)</div>
+      <div class="val" style="color:var(--gold);" id="jackpotPot">Loading...</div>
+      <div style="font-size:13px; color:var(--muted); line-height:1.6;">
+        Next Golden Hit Pays (80%): <strong style="color:var(--gold);" id="nextJackpotPayout">...</strong><br>
+        Current Epoch: <strong style="color:#fff;" id="epochCount">...</strong> | Block Reward: <strong>50.00 FRAC</strong>
+      </div>
+      <div class="input-row">
+        <input id="boostAmt" type="number" step="any" placeholder="Bonus FRAC to boost pot">
+        <button class="btn btn-gold" onclick="boostJackpot()">Boost Pot</button>
+      </div>
+    </div>
+
+    <!-- STAKING POOL & NETWORK TVL -->
+    <div class="box glow-red">
+      <div class="label" style="color:var(--red);">◆ Staking Loyalty Pool (Real Yield)</div>
+      <div class="val" style="color:var(--red);" id="totalStaked">Loading...</div>
+      <div style="font-size:13px; color:var(--muted); line-height:1.6;">
+        Circulating Supply: <strong style="color:#fff;" id="totalSupply">...</strong> / 21,000,000 FRAC<br>
+        Pool Dividend: <strong>1.75 FRAC per block</strong> (Split among stakers)
+      </div>
+      <div class="input-row">
+        <input id="stakeAmt" type="number" step="any" placeholder="FRAC amount to stake">
+        <button class="btn btn-primary" onclick="stakeTokens()">Stake</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- USER WALLET & STAKING POSITION (METAMASK) -->
+  <div class="box" style="margin-bottom:22px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <h3 style="font-size:16px;">👤 Your Wallet &amp; Staking Dashboard</h3>
+      <span id="userAddressLabel" style="font-size:12px; color:var(--cyan); font-family:monospace;">Wallet Not Connected</span>
+    </div>
+    
+    <div class="grid-2" style="margin-top:14px; margin-bottom:10px;">
+      <div>
+        <div class="label">Your Liquid Wallet Balance</div>
+        <div class="val" id="userWalletBal">0.00 FRAC</div>
+      </div>
+      <div>
+        <div class="label">Your Staked Balance &amp; Pending Dividends</div>
+        <div class="val" style="color:var(--green);"><span id="userStakedBal">0.00</span> Staked | <span style="color:var(--gold);" id="userPendingRewards">0.0000</span> Earned</div>
+      </div>
+    </div>
+
+    <div class="input-row">
+      <button class="btn btn-gold" onclick="claimRewards()">💰 Claim Staking Rewards</button>
+      <input id="unstakeAmt" type="number" step="any" placeholder="FRAC to unstake">
+      <button class="btn btn-outline" onclick="unstakeTokens()">Unstake to Wallet</button>
+    </div>
+  </div>
+
+  <!-- DOWNLOAD STANDALONE OLD-PC MINER -->
+  <div class="miner-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h3 style="font-size:18px; color:var(--green);">⛏ 24/7 Standalone Old-PC CPU Miner</h3>
+        <p style="font-size:13px; color:var(--muted); margin-top:2px;">Mine FRAC on any older Windows, Mac, Linux laptop, desktop, or Raspberry Pi.</p>
+      </div>
+      <a class="btn btn-primary" href="frac_miner.py" download="frac_miner.py">⬇ Download frac_miner.py</a>
+    </div>
+
+    <div style="margin-top:14px;">
+      <p style="font-size:13px; color:#fff;"><strong>How to Run in 2 Steps:</strong></p>
+      <pre># 1. Open a terminal where frac_miner.py is downloaded
+# 2. Run the interactive miner (pre-configured for Base Mainnet):
+python3 frac_miner.py
+
+# Or run non-stop with auto-stake enabled:
+python3 frac_miner.py --private-key 0xYOUR_MINER_KEY --auto-stake</pre>
+      <p style="font-size:12px; color:var(--muted);">
+        *Requires Python 3 &amp; Foundry (<code>cast</code>). Use a dedicated burner wallet with ~$0.50 of ETH on Base for gas (~$0.001 per block).
+      </p>
+    </div>
+  </div>
+
+  <!-- FOOTER & TRANSPARENCY -->
+  <footer>
+    <p>
+      Official Contract: <a href="https://basescan.org/token/0x8F92de279E8f942Cb4E37F3A207A221CB5566C04" target="_blank">0x8F92de279E8f942Cb4E37F3A207A221CB5566C04</a> |
+      <a href="https://basescan.org/address/0x8F92de279E8f942Cb4E37F3A207A221CB5566C04#code" target="_blank">BaseScan (Source Verified)</a> |
+      <a href="https://dexscreener.com/base/0x7EEc5ad1D6ca2CE83B6BD8C774737726245C3F87" target="_blank">DexScreener Chart</a> |
+      <a href="WHITEPAPER.md" target="_blank">Technical Whitepaper</a>
+    </p>
+    <p style="margin-top:6px;">Decentralized, open-source Proof-of-Work cryptocurrency on Base Mainnet. Zero corporate tracking.</p>
+  </footer>
+
+</div>
+
+<script>
+const CONTRACT_ADDRESS = "0x8F92de279E8f942Cb4E37F3A207A221CB5566C04";
+const RPC_ENDPOINT = "https://mainnet.base.org"; // 100% public RPC, zero private host connections
+
+let userAccount = null;
+
+// Function signatures (ERC20 + FractalPoW)
+const SIGS = {
+  epochCount: "0x98124200",
+  jackpotPot: "0x3bbd0922",
+  totalStaked: "0x817b1cd2",
+  totalSupply: "0x18160ddd",
+  balanceOf: "0x70a08231",
+  stakedBalance: "0x51c5f3e4",
+  pendingRewards: "0x35655577",
+  stake: "0xa694fc3a",
+  unstake: "0x2e17de78",
+  claimRewards: "0x372500ab",
+  seedJackpot: "0x3c96eb8e"
+};
+
+function formatWei(weiHex, decimals = 2) {
+  try {
+    const val = BigInt(weiHex);
+    const whole = val / 1000000000000000000n;
+    const fraction = (val % 1000000000000000000n).toString().padStart(18, '0').slice(0, decimals);
+    return Number(whole).toLocaleString() + (decimals > 0 ? '.' + fraction : '');
+  } catch (e) {
+    return "0.00";
+  }
+}
+
+function padAddress(addr) {
+  return addr.toLowerCase().replace("0x", "").padStart(64, "0");
+}
+
+function padUint256(amountEth) {
+  const wei = BigInt(Math.floor(amountEth * 1e18));
+  return wei.toString(16).padStart(64, "0");
+}
+
+async function rpcCall(data, to = CONTRACT_ADDRESS) {
+  const resp = await fetch(RPC_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "eth_call",
+      params: [{ to, data }, "latest"]
+    })
+  });
+  const res = await resp.json();
+  return res.result;
+}
+
+async function refreshStats() {
+  try {
+    const [epochHex, jackpotHex, stakedHex, supplyHex] = await Promise.all([
+      rpcCall(SIGS.epochCount),
+      rpcCall(SIGS.jackpotPot),
+      rpcCall(SIGS.totalStaked),
+      rpcCall(SIGS.totalSupply)
+    ]);
+
+    const epochNum = parseInt(epochHex, 16);
+    document.getElementById("epochCount").textContent = "#" + (epochNum + 1);
+    
+    const jackpotVal = BigInt(jackpotHex);
+    document.getElementById("jackpotPot").textContent = formatWei(jackpotHex) + " FRAC";
+    
+    // 80% jackpot payout
+    const nextWin = (jackpotVal * 80n) / 100n;
+    document.getElementById("nextJackpotPayout").textContent = formatWei("0x" + nextWin.toString(16)) + " FRAC";
+
+    document.getElementById("totalStaked").textContent = formatWei(stakedHex) + " FRAC";
+    document.getElementById("totalSupply").textContent = formatWei(supplyHex, 0);
+
+    if (userAccount) {
+      await refreshUser();
+    }
+  } catch (err) {
+    console.error("RPC error:", err);
+  }
+}
+
+async function refreshUser() {
+  if (!userAccount) return;
+  const userPadded = padAddress(userAccount);
+  const [balHex, stakeHex, pendingHex] = await Promise.all([
+    rpcCall(SIGS.balanceOf + userPadded),
+    rpcCall(SIGS.stakedBalance + userPadded),
+    rpcCall(SIGS.pendingRewards + userPadded)
+  ]);
+
+  document.getElementById("userWalletBal").textContent = formatWei(balHex) + " FRAC";
+  document.getElementById("userStakedBal").textContent = formatWei(stakeHex);
+  document.getElementById("userPendingRewards").textContent = formatWei(pendingHex, 4);
+}
+
+function showStatus(msg, type = "info") {
+  const banner = document.getElementById("statusBanner");
+  banner.className = `status-msg ${type}`;
+  banner.textContent = msg;
+  setTimeout(() => { banner.style.display = "none"; }, 8000);
+}
+
+async function connectWallet() {
+  if (!window.ethereum) {
+    showStatus("Please install MetaMask or a Web3 wallet to connect.", "error");
+    return;
+  }
+  try {
+    const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    userAccount = accounts[0];
+    
+    // Ensure Base Network (8453 / 0x2105)
+    const chainId = await window.ethereum.request({ method: "eth_chainId" });
+    if (chainId !== "0x2105") {
+      try {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0x2105" }]
+        });
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+          await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [{
+              chainId: "0x2105",
+              chainName: "Base Mainnet",
+              rpcUrls: ["https://mainnet.base.org"],
+              nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+              blockExplorerUrls: ["https://basescan.org"]
+            }]
+          });
+        }
+      }
+    }
+
+    document.getElementById("connectBtn").textContent = userAccount.slice(0, 6) + "..." + userAccount.slice(-4);
+    document.getElementById("userAddressLabel").textContent = userAccount;
+    showStatus("Connected to Base Mainnet!", "success");
+    await refreshUser();
+  } catch (e) {
+    showStatus(e.message || "Failed to connect wallet.", "error");
+  }
+}
+
+async function sendTransaction(data) {
+  if (!userAccount) {
+    await connectWallet();
+    if (!userAccount) return;
+  }
+  try {
+    showStatus("Please confirm transaction in MetaMask...", "info");
+    const txHash = await window.ethereum.request({
+      method: "eth_sendTransaction",
+      params: [{
+        from: userAccount,
+        to: CONTRACT_ADDRESS,
+        data: data
+      }]
+    });
+    showStatus("Transaction submitted: " + txHash.slice(0, 10) + "...", "success");
+    setTimeout(refreshStats, 4000);
+  } catch (err) {
+    showStatus(err.message || "Transaction cancelled", "error");
+  }
+}
+
+function stakeTokens() {
+  const amt = parseFloat(document.getElementById("stakeAmt").value);
+  if (!amt || amt <= 0) return showStatus("Enter a valid FRAC amount to stake.", "error");
+  sendTransaction(SIGS.stake + padUint256(amt));
+}
+
+function unstakeTokens() {
+  const amt = parseFloat(document.getElementById("unstakeAmt").value);
+  if (!amt || amt <= 0) return showStatus("Enter a valid FRAC amount to unstake.", "error");
+  sendTransaction(SIGS.unstake + padUint256(amt));
+}
+
+function claimRewards() {
+  sendTransaction(SIGS.claimRewards);
+}
+
+function boostJackpot() {
+  const amt = parseFloat(document.getElementById("boostAmt").value);
+  if (!amt || amt <= 0) return showStatus("Enter a valid FRAC amount to boost the pot.", "error");
+  sendTransaction(SIGS.seedJackpot + padUint256(amt));
+}
+
+async function addTokenToMetaMask() {
+  if (!window.ethereum) return;
+  try {
+    await window.ethereum.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: CONTRACT_ADDRESS,
+          symbol: 'FRAC',
+          decimals: 18,
+          image: window.location.origin + '/FRAC_Logo.png'
+        },
+      },
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// Initial fetch & loop every 6s
+refreshStats();
+setInterval(refreshStats, 6000);
+</script>
+</body>
+</html>
