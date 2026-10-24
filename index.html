@@ -9,10 +9,12 @@
   :root {
     --bg: #09090d;
     --card: #121218;
+    --card-hover: #181822;
     --border: #22222d;
     --red: #ff2a4b;
     --red-glow: rgba(255, 42, 75, 0.25);
     --gold: #ffc400;
+    --gold-glow: rgba(255, 196, 0, 0.2);
     --cyan: #00e5ff;
     --green: #00e676;
     --text: #e0e0e6;
@@ -44,12 +46,33 @@
   .brand h1 span { color: var(--red); }
   .brand p { font-size: 13px; color: var(--muted); }
 
-  .nav-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  .network-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 230, 118, 0.1);
+    color: var(--green);
+    border: 1px solid rgba(0, 230, 118, 0.3);
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+  .pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+  }
+
+  .nav-btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   button, .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 9px 16px;
+    padding: 9px 15px;
     font-size: 13px;
     font-weight: 600;
     border-radius: 6px;
@@ -61,9 +84,10 @@
   .btn-primary { background: var(--red); color: #fff; box-shadow: 0 0 12px var(--red-glow); }
   .btn-primary:hover { background: #ff4763; }
   .btn-gold { background: #1a1600; color: var(--gold); border-color: var(--gold); }
-  .btn-gold:hover { background: var(--gold); color: #000; }
+  .btn-gold:hover { background: var(--gold); color: #000; box-shadow: 0 0 12px var(--gold-glow); }
   .btn-outline { background: #171720; color: var(--text); border-color: var(--border); }
   .btn-outline:hover { border-color: var(--muted); background: #20202c; }
+  .btn-xs { padding: 4px 8px; font-size: 11px; border-radius: 4px; }
 
   /* PERKS BANNER */
   .perks-grid {
@@ -98,6 +122,7 @@
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 20px;
+    transition: border-color 0.2s ease;
   }
   .box.glow-gold { border-color: rgba(255, 196, 0, 0.35); box-shadow: 0 0 14px rgba(255, 196, 0, 0.08); }
   .box.glow-red { border-color: rgba(255, 42, 75, 0.35); box-shadow: 0 0 14px var(--red-glow); }
@@ -105,10 +130,16 @@
   .val { font-size: 26px; font-weight: 800; margin: 4px 0 10px 0; font-family: monospace; }
 
   /* INPUT & ACTION ROWS */
-  .input-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-  input {
+  .input-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+  .input-wrapper {
+    position: relative;
     flex: 1;
     min-width: 140px;
+    display: flex;
+    align-items: center;
+  }
+  input {
+    width: 100%;
     background: #09090d;
     border: 1px solid var(--border);
     border-radius: 6px;
@@ -118,14 +149,28 @@
     font-family: inherit;
   }
   input:focus { outline: none; border-color: var(--red); }
+  .input-max-btn {
+    position: absolute;
+    right: 6px;
+    background: #222230;
+    color: var(--cyan);
+    border: 1px solid #333344;
+    padding: 2px 7px;
+    font-size: 10px;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .input-max-btn:hover { background: #333346; color: #fff; }
 
   /* STATUS MESSAGE */
   .status-msg {
-    margin-bottom: 16px;
-    padding: 10px 14px;
+    margin: 16px 0;
+    padding: 12px 16px;
     border-radius: 6px;
     font-size: 13px;
     display: none;
+    line-height: 1.4;
   }
   .status-msg.info { background: #0b1a24; border: 1px solid var(--cyan); color: var(--cyan); display: block; }
   .status-msg.success { background: #0c2014; border: 1px solid var(--green); color: var(--green); display: block; }
@@ -170,13 +215,14 @@
     <div class="brand">
       <img src="FRAC_Logo.png" alt="FRAC Logo">
       <div>
-        <h1>FRACTAL <span>COIN</span> (FRAC)</h1>
+        <h1>FRACTAL <span>COIN</span> (FRAC) <span class="network-badge"><span class="pulse-dot"></span> Base Mainnet Live</span></h1>
         <p>Base Mainnet (Chain ID 8453) • 0% Tax • 21M Capped Proof-of-Work</p>
       </div>
     </div>
     <div class="nav-btns">
       <button id="connectBtn" class="btn-primary" onclick="connectWallet()">Connect MetaMask</button>
       <button class="btn-gold" onclick="addTokenToMetaMask()">+ Add to Wallet</button>
+      <button class="btn btn-outline" onclick="copyContractAddress()" title="Copy FRAC token address">📋 Copy Contract</button>
       <a class="btn btn-outline" href="https://app.uniswap.org/swap?chain=base&outputCurrency=0x8F92de279E8f942Cb4E37F3A207A221CB5566C04" target="_blank">Swap on Uniswap</a>
     </div>
   </header>
@@ -214,7 +260,9 @@
         Current Epoch: <strong style="color:#fff;" id="epochCount">...</strong> | Block Reward: <strong>50.00 FRAC</strong>
       </div>
       <div class="input-row">
-        <input id="boostAmt" type="number" step="any" placeholder="Bonus FRAC to boost pot">
+        <div class="input-wrapper">
+          <input id="boostAmt" type="number" step="any" placeholder="Bonus FRAC to boost pot">
+        </div>
         <button class="btn btn-gold" onclick="boostJackpot()">Boost Pot</button>
       </div>
     </div>
@@ -228,7 +276,10 @@
         Pool Dividend: <strong>1.75 FRAC per block</strong> (Split among stakers)
       </div>
       <div class="input-row">
-        <input id="stakeAmt" type="number" step="any" placeholder="FRAC amount to stake">
+        <div class="input-wrapper">
+          <input id="stakeAmt" type="number" step="any" placeholder="FRAC amount to stake">
+          <button class="input-max-btn" type="button" onclick="setMaxStake()">MAX</button>
+        </div>
         <button class="btn btn-primary" onclick="stakeTokens()">Stake</button>
       </div>
     </div>
@@ -237,7 +288,7 @@
   <!-- USER WALLET & STAKING POSITION (METAMASK) -->
   <div class="box" style="margin-bottom:22px;">
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-      <h3 style="font-size:16px;">👤 Your Wallet &amp; Staking Dashboard</h3>
+      <h3 style="font-size:16px;">👤 Connected Web3 Wallet Dashboard</h3>
       <span id="userAddressLabel" style="font-size:12px; color:var(--cyan); font-family:monospace;">Wallet Not Connected</span>
     </div>
     
@@ -254,8 +305,46 @@
 
     <div class="input-row">
       <button class="btn btn-gold" onclick="claimRewards()">💰 Claim Staking Rewards</button>
-      <input id="unstakeAmt" type="number" step="any" placeholder="FRAC to unstake">
+      <div class="input-wrapper">
+        <input id="unstakeAmt" type="number" step="any" placeholder="FRAC to unstake">
+        <button class="input-max-btn" type="button" onclick="setMaxUnstake()">MAX</button>
+      </div>
       <button class="btn btn-outline" onclick="unstakeTokens()">Unstake to Wallet</button>
+    </div>
+  </div>
+
+  <!-- INSPECT ANY MINER / WALLET ADDRESS -->
+  <div class="box" style="margin-bottom:22px; border-color:#2a2a3c;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <div>
+        <h3 style="font-size:16px; color:var(--cyan);">🔍 Inspect Any Miner / Wallet Address</h3>
+        <p style="font-size:12px; color:var(--muted); margin-top:2px;">Check balances and staking earnings of your dedicated miner rig without connecting its private key.</p>
+      </div>
+    </div>
+
+    <div class="input-row" style="margin-top:14px;">
+      <div class="input-wrapper" style="flex:2;">
+        <input id="minerAddressInput" type="text" placeholder="Paste Miner Address (0x...)" style="font-family:monospace;">
+      </div>
+      <button class="btn btn-outline" onclick="inspectMinerAddress()">Inspect Miner</button>
+      <button class="btn btn-xs btn-outline" onclick="clearInspectedMiner()" title="Clear">Clear</button>
+    </div>
+
+    <div id="minerStatsBox" style="display:none; margin-top:16px; padding:14px; background:#0a0a10; border-radius:6px; border:1px solid #1f1f2e;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+        <span style="font-size:12px; color:var(--muted); font-family:monospace;" id="inspectedMinerDisplay">0x...</span>
+        <a id="minerBasescanLink" href="#" target="_blank" style="font-size:11px; color:var(--cyan); text-decoration:none;">View on BaseScan ↗</a>
+      </div>
+      <div class="grid-2" style="margin-bottom:0; gap:12px;">
+        <div>
+          <div class="label">Liquid Miner Balance</div>
+          <div class="val" style="font-size:20px;" id="minerLiquidBal">0.00 FRAC</div>
+        </div>
+        <div>
+          <div class="label">Staked &amp; Pending Dividends</div>
+          <div class="val" style="font-size:20px; color:var(--green);"><span id="minerStakedBal">0.00</span> Staked | <span style="color:var(--gold);" id="minerPendingBal">0.0000</span> Earned</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -278,7 +367,7 @@ python3 frac_miner.py
 # Or run non-stop with auto-stake enabled:
 python3 frac_miner.py --private-key 0xYOUR_MINER_KEY --auto-stake</pre>
       <p style="font-size:12px; color:var(--muted);">
-        *Requires Python 3 &amp; Foundry (<code>cast</code>). Use a dedicated burner wallet with ~$0.50 of ETH on Base for gas (~$0.001 per block).
+        *Requires standard Python 3 (zero external pip packages needed). Use a dedicated burner wallet with ~$0.50 of ETH on Base for gas (~$0.001 per block).
       </p>
     </div>
   </div>
@@ -298,27 +387,39 @@ python3 frac_miner.py --private-key 0xYOUR_MINER_KEY --auto-stake</pre>
 
 <script>
 const CONTRACT_ADDRESS = "0x8F92de279E8f942Cb4E37F3A207A221CB5566C04";
-const RPC_ENDPOINT = "https://mainnet.base.org"; // 100% public RPC, zero private host connections
+
+// Multi-RPC failover pool for 100% browser uptime
+const RPC_ENDPOINTS = [
+  "https://base-rpc.publicnode.com",
+  "https://mainnet.base.org",
+  "https://1rpc.io/base"
+];
+let rpcIndex = 0;
 
 let userAccount = null;
+let rawUserBal = "0";
+let rawUserStaked = "0";
+let inspectedMinerAddress = localStorage.getItem("frac_inspected_miner") || "";
 
-// Function signatures (ERC20 + FractalPoW)
+// Exact 4-byte Keccak-256 function selectors (verified against FractalPoWToken.sol)
 const SIGS = {
-  epochCount: "0x98124200",
-  jackpotPot: "0x3bbd0922",
+  epochCount: "0x829965cc",
+  jackpotPot: "0x1eb26628",
   totalStaked: "0x817b1cd2",
   totalSupply: "0x18160ddd",
   balanceOf: "0x70a08231",
-  stakedBalance: "0x51c5f3e4",
-  pendingRewards: "0x35655577",
+  stakedBalance: "0x60217267",
+  pendingRewards: "0x31d7a262",
+  claimableRewards: "0xdc01f60d",
   stake: "0xa694fc3a",
   unstake: "0x2e17de78",
   claimRewards: "0x372500ab",
-  seedJackpot: "0x3c96eb8e"
+  seedJackpot: "0x02950fb9"
 };
 
 function formatWei(weiHex, decimals = 2) {
   try {
+    if (!weiHex || weiHex === "0x" || weiHex === "0x0" || weiHex === "0x00") return "0.00";
     const val = BigInt(weiHex);
     const whole = val / 1000000000000000000n;
     const fraction = (val % 1000000000000000000n).toString().padStart(18, '0').slice(0, decimals);
@@ -328,28 +429,64 @@ function formatWei(weiHex, decimals = 2) {
   }
 }
 
+function weiToDecimalString(weiHex) {
+  try {
+    if (!weiHex || weiHex === "0x" || weiHex === "0x0" || weiHex === "0x00") return "0";
+    const val = BigInt(weiHex);
+    const whole = val / 1000000000000000000n;
+    const fraction = (val % 1000000000000000000n).toString().padStart(18, '0').replace(/0+$/, '');
+    return fraction.length > 0 ? `${whole}.${fraction}` : `${whole}`;
+  } catch (e) {
+    return "0";
+  }
+}
+
+function parseFracToWei(amtStr) {
+  if (!amtStr) return 0n;
+  const cleaned = amtStr.toString().trim();
+  if (!cleaned || isNaN(cleaned)) return 0n;
+  const parts = cleaned.split('.');
+  const whole = BigInt(parts[0] || '0') * 1000000000000000000n;
+  let fractionStr = parts[1] || '';
+  if (fractionStr.length > 18) fractionStr = fractionStr.slice(0, 18);
+  else fractionStr = fractionStr.padEnd(18, '0');
+  return whole + BigInt(fractionStr);
+}
+
 function padAddress(addr) {
   return addr.toLowerCase().replace("0x", "").padStart(64, "0");
 }
 
-function padUint256(amountEth) {
-  const wei = BigInt(Math.floor(amountEth * 1e18));
+function padUint256(amountStr) {
+  const wei = parseFracToWei(amountStr);
   return wei.toString(16).padStart(64, "0");
 }
 
 async function rpcCall(data, to = CONTRACT_ADDRESS) {
-  const resp = await fetch(RPC_ENDPOINT, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-      id: 1,
-      method: "eth_call",
-      params: [{ to, data }, "latest"]
-    })
-  });
-  const res = await resp.json();
-  return res.result;
+  for (let attempt = 0; attempt < RPC_ENDPOINTS.length; attempt++) {
+    const endpoint = RPC_ENDPOINTS[(rpcIndex + attempt) % RPC_ENDPOINTS.length];
+    try {
+      const resp = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: Math.floor(Math.random() * 100000),
+          method: "eth_call",
+          params: [{ to, data }, "latest"]
+        })
+      });
+      if (!resp.ok) continue;
+      const res = await resp.json();
+      if (res && res.result && res.result !== "0x") {
+        rpcIndex = (rpcIndex + attempt) % RPC_ENDPOINTS.length;
+        return res.result;
+      }
+    } catch (e) {
+      // try next RPC endpoint in pool
+    }
+  }
+  return "0x00";
 }
 
 async function refreshStats() {
@@ -361,21 +498,31 @@ async function refreshStats() {
       rpcCall(SIGS.totalSupply)
     ]);
 
-    const epochNum = parseInt(epochHex, 16);
-    document.getElementById("epochCount").textContent = "#" + (epochNum + 1);
+    if (epochHex && epochHex !== "0x00") {
+      const epochNum = parseInt(epochHex, 16);
+      document.getElementById("epochCount").textContent = "#" + (epochNum + 1);
+    }
     
-    const jackpotVal = BigInt(jackpotHex);
-    document.getElementById("jackpotPot").textContent = formatWei(jackpotHex) + " FRAC";
-    
-    // 80% jackpot payout
-    const nextWin = (jackpotVal * 80n) / 100n;
-    document.getElementById("nextJackpotPayout").textContent = formatWei("0x" + nextWin.toString(16)) + " FRAC";
+    if (jackpotHex && jackpotHex !== "0x00") {
+      const jackpotVal = BigInt(jackpotHex);
+      document.getElementById("jackpotPot").textContent = formatWei(jackpotHex) + " FRAC";
+      const nextWin = (jackpotVal * 80n) / 100n;
+      document.getElementById("nextJackpotPayout").textContent = formatWei("0x" + nextWin.toString(16)) + " FRAC";
+    }
 
-    document.getElementById("totalStaked").textContent = formatWei(stakedHex) + " FRAC";
-    document.getElementById("totalSupply").textContent = formatWei(supplyHex, 0);
+    if (stakedHex && stakedHex !== "0x00") {
+      document.getElementById("totalStaked").textContent = formatWei(stakedHex) + " FRAC";
+    }
+    
+    if (supplyHex && supplyHex !== "0x00") {
+      document.getElementById("totalSupply").textContent = formatWei(supplyHex, 0);
+    }
 
     if (userAccount) {
       await refreshUser();
+    }
+    if (inspectedMinerAddress) {
+      await refreshInspectedMiner();
     }
   } catch (err) {
     console.error("RPC error:", err);
@@ -391,21 +538,90 @@ async function refreshUser() {
     rpcCall(SIGS.pendingRewards + userPadded)
   ]);
 
+  rawUserBal = weiToDecimalString(balHex);
+  rawUserStaked = weiToDecimalString(stakeHex);
+
   document.getElementById("userWalletBal").textContent = formatWei(balHex) + " FRAC";
   document.getElementById("userStakedBal").textContent = formatWei(stakeHex);
   document.getElementById("userPendingRewards").textContent = formatWei(pendingHex, 4);
+}
+
+function setMaxStake() {
+  if (!rawUserBal || rawUserBal === "0") {
+    return showStatus("No liquid FRAC in wallet to stake.", "info");
+  }
+  document.getElementById("stakeAmt").value = rawUserBal;
+}
+
+function setMaxUnstake() {
+  if (!rawUserStaked || rawUserStaked === "0") {
+    return showStatus("No staked FRAC available to unstake.", "info");
+  }
+  document.getElementById("unstakeAmt").value = rawUserStaked;
+}
+
+// INSPECT MINER ADDRESS
+async function inspectMinerAddress(addrToInspect) {
+  const addr = (addrToInspect || document.getElementById("minerAddressInput").value || "").trim();
+  if (!addr || !/^0x[a-fA-F0-9]{40}$/.test(addr)) {
+    return showStatus("Please enter a valid 0x Ethereum/Base wallet address.", "error");
+  }
+  inspectedMinerAddress = addr;
+  localStorage.setItem("frac_inspected_miner", addr);
+
+  document.getElementById("minerStatsBox").style.display = "block";
+  document.getElementById("inspectedMinerDisplay").textContent = addr;
+  document.getElementById("minerBasescanLink").href = `https://basescan.org/address/${addr}`;
+  document.getElementById("minerLiquidBal").textContent = "Loading...";
+  document.getElementById("minerStakedBal").textContent = "...";
+  document.getElementById("minerPendingBal").textContent = "...";
+
+  await refreshInspectedMiner();
+}
+
+async function refreshInspectedMiner() {
+  if (!inspectedMinerAddress) return;
+  try {
+    const padded = padAddress(inspectedMinerAddress);
+    const [balHex, stakeHex, pendingHex] = await Promise.all([
+      rpcCall(SIGS.balanceOf + padded),
+      rpcCall(SIGS.stakedBalance + padded),
+      rpcCall(SIGS.pendingRewards + padded)
+    ]);
+    document.getElementById("minerLiquidBal").textContent = formatWei(balHex) + " FRAC";
+    document.getElementById("minerStakedBal").textContent = formatWei(stakeHex);
+    document.getElementById("minerPendingBal").textContent = formatWei(pendingHex, 4);
+  } catch (e) {
+    console.error("Error inspecting miner:", e);
+  }
+}
+
+function clearInspectedMiner() {
+  inspectedMinerAddress = "";
+  localStorage.removeItem("frac_inspected_miner");
+  document.getElementById("minerAddressInput").value = "";
+  document.getElementById("minerStatsBox").style.display = "none";
 }
 
 function showStatus(msg, type = "info") {
   const banner = document.getElementById("statusBanner");
   banner.className = `status-msg ${type}`;
   banner.textContent = msg;
+  banner.style.display = "block";
   setTimeout(() => { banner.style.display = "none"; }, 8000);
+}
+
+function copyContractAddress() {
+  navigator.clipboard.writeText(CONTRACT_ADDRESS).then(() => {
+    showStatus("Copied FRAC Contract Address to clipboard: " + CONTRACT_ADDRESS, "success");
+  }).catch(() => {
+    showStatus("FRAC Contract: " + CONTRACT_ADDRESS, "info");
+  });
 }
 
 async function connectWallet() {
   if (!window.ethereum) {
-    showStatus("Please install MetaMask or a Web3 wallet to connect.", "error");
+    showStatus("MetaMask or Web3 wallet not detected. Install MetaMask or paste your address below.", "error");
     return;
   }
   try {
@@ -451,7 +667,7 @@ async function sendTransaction(data) {
     if (!userAccount) return;
   }
   try {
-    showStatus("Please confirm transaction in MetaMask...", "info");
+    showStatus("Please confirm transaction in your Web3 wallet...", "info");
     const txHash = await window.ethereum.request({
       method: "eth_sendTransaction",
       params: [{
@@ -460,23 +676,24 @@ async function sendTransaction(data) {
         data: data
       }]
     });
-    showStatus("Transaction submitted: " + txHash.slice(0, 10) + "...", "success");
+    showStatus("Transaction submitted: " + txHash.slice(0, 10) + "... Waiting for block confirmation...", "success");
     setTimeout(refreshStats, 4000);
+    setTimeout(refreshStats, 8000);
   } catch (err) {
     showStatus(err.message || "Transaction cancelled", "error");
   }
 }
 
 function stakeTokens() {
-  const amt = parseFloat(document.getElementById("stakeAmt").value);
-  if (!amt || amt <= 0) return showStatus("Enter a valid FRAC amount to stake.", "error");
-  sendTransaction(SIGS.stake + padUint256(amt));
+  const amtVal = document.getElementById("stakeAmt").value;
+  if (!amtVal || parseFloat(amtVal) <= 0) return showStatus("Enter a valid FRAC amount to stake.", "error");
+  sendTransaction(SIGS.stake + padUint256(amtVal));
 }
 
 function unstakeTokens() {
-  const amt = parseFloat(document.getElementById("unstakeAmt").value);
-  if (!amt || amt <= 0) return showStatus("Enter a valid FRAC amount to unstake.", "error");
-  sendTransaction(SIGS.unstake + padUint256(amt));
+  const amtVal = document.getElementById("unstakeAmt").value;
+  if (!amtVal || parseFloat(amtVal) <= 0) return showStatus("Enter a valid FRAC amount to unstake.", "error");
+  sendTransaction(SIGS.unstake + padUint256(amtVal));
 }
 
 function claimRewards() {
@@ -484,15 +701,20 @@ function claimRewards() {
 }
 
 function boostJackpot() {
-  const amt = parseFloat(document.getElementById("boostAmt").value);
-  if (!amt || amt <= 0) return showStatus("Enter a valid FRAC amount to boost the pot.", "error");
-  sendTransaction(SIGS.seedJackpot + padUint256(amt));
+  const amtVal = document.getElementById("boostAmt").value;
+  if (!amtVal || parseFloat(amtVal) <= 0) return showStatus("Enter a valid FRAC amount to boost the pot.", "error");
+  sendTransaction(SIGS.seedJackpot + padUint256(amtVal));
 }
 
 async function addTokenToMetaMask() {
-  if (!window.ethereum) return;
+  if (!window.ethereum) {
+    showStatus("MetaMask or Web3 wallet not detected. Click 'Copy Contract' to add manually.", "error");
+    return;
+  }
   try {
-    await window.ethereum.request({
+    // Dynamic absolute URL for FRAC_Logo.png (works on GitHub Pages and custom domains)
+    const logoUrl = new URL('FRAC_Logo.png', window.location.href).href;
+    const wasAdded = await window.ethereum.request({
       method: 'wallet_watchAsset',
       params: {
         type: 'ERC20',
@@ -500,13 +722,24 @@ async function addTokenToMetaMask() {
           address: CONTRACT_ADDRESS,
           symbol: 'FRAC',
           decimals: 18,
-          image: window.location.origin + '/FRAC_Logo.png'
+          image: logoUrl
         },
       },
     });
+    if (wasAdded) {
+      showStatus("FRAC successfully added to your wallet!", "success");
+    } else {
+      showStatus("Add token request was dismissed.", "info");
+    }
   } catch (e) {
-    console.error(e);
+    showStatus("Could not add to wallet: " + (e.message || e), "error");
   }
+}
+
+// Restore inspected miner on load if saved
+if (inspectedMinerAddress) {
+  document.getElementById("minerAddressInput").value = inspectedMinerAddress;
+  inspectMinerAddress(inspectedMinerAddress);
 }
 
 // Initial fetch & loop every 6s
