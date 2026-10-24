@@ -12,6 +12,7 @@ import argparse
 import json
 import os
 import subprocess
+import sys
 import time
 import urllib.request
 
@@ -142,6 +143,145 @@ def get_chain_timestamp(rpc_url: str) -> int:
     return int(res.stdout.strip().split()[0])
 
 
+def get_eth_balance(rpc_url: str, addr: str) -> float:
+    env = os.environ.copy()
+    env["PATH"] = f"{os.path.expanduser('~/.foundry/bin')}:{env.get('PATH', '')}"
+    try:
+        res = subprocess.run(
+            ["cast", "balance", "--rpc-url", rpc_url, addr],
+            capture_output=True, text=True, env=env, check=True,
+        )
+        return int(res.stdout.strip().split()[0]) / 1e18
+    except Exception:
+        return 0.0
+
+
+def get_wallet_balances(rpc_url: str, contract: str, addr: str) -> dict:
+    bal_wei = int(cast_call(rpc_url, contract, "balanceOf(address)(uint256)", addr))
+    staked_wei = int(cast_call(rpc_url, contract, "stakedBalance(address)(uint256)", addr))
+    pending_wei = int(cast_call(rpc_url, contract, "pendingRewards(address)(uint256)", addr))
+    eth_bal = get_eth_balance(rpc_url, addr)
+    return {
+        "address": addr,
+        "eth": eth_bal,
+        "liquid_frac": bal_wei / 1e18,
+        "staked_frac": staked_wei / 1e18,
+        "pending_frac": pending_wei / 1e18,
+    }
+
+
+def print_wallet_status(rpc_url: str, contract: str, addr: str) -> dict:
+    b = get_wallet_balances(rpc_url, contract, addr)
+    print("\033[96m" + "=" * 68)
+    print("  FRACTAL COIN (FRAC) — MINER WALLET & STAKING STATUS")
+    print("=" * 68 + "\033[0m")
+    print(f"  Miner Address    : {b['address']}")
+    print(f"  Base ETH (Gas)   : {b['eth']:.6f} ETH")
+    print(f"  Liquid FRAC      : {b['liquid_frac']:,.2f} FRAC (Ready to transfer/trade)")
+    print(f"  Staked FRAC      : {b['staked_frac']:,.2f} FRAC (Earning 3.5% block yield)")
+    print(f"  Pending Rewards  : {b['pending_frac']:,.4f} FRAC (Claimable dividends)")
+    print("\033[96m" + "-" * 68 + "\033[0m\n")
+    return b
+
+
+def do_claim_rewards(rpc_url: str, contract: str, private_key: str) -> None:
+    miner_addr = get_address_from_key(private_key)
+    b = get_wallet_balances(rpc_url, contract, miner_addr)
+    if b["pending_frac"] <= 0:
+        print(f"  [!] No pending rewards to claim for {miner_addr}.")
+        return
+    print(f"  [+] Claiming {b['pending_frac']:,.4f} FRAC in rewards to {miner_addr}...")
+    tx_hash = cast_send(rpc_url, private_key, contract, "claimRewards()")
+    print(f"  [✓] Rewards claimed successfully! Tx: {tx_hash[:18]}...\n")
+    print_wallet_status(rpc_url, contract, miner_addr)
+
+
+def do_unstake(rpc_url: str, contract: str, private_key: str, amount_frac: float = 0.0) -> None:
+    miner_addr = get_address_from_key(private_key)
+    b = get_wallet_balances(rpc_url, contract, miner_addr)
+    if b["staked_frac"] <= 0:
+        print(f"  [!] No staked FRAC found for {miner_addr}.")
+        return
+    if amount_frac <= 0 or amount_frac >= b["staked_frac"]:
+        target_amount = b["staked_frac"]
+    else:
+        target_amount = amount_frac
+
+    amt_wei = str(int(target_amount * 1e18))
+    print(f"  [+] Unstaking {target_amount:,.2f} FRAC back to liquid wallet {miner_addr}...")
+    tx_hash = cast_send(rpc_url, private_key, contract, "unstake(uint256)", amt_wei)
+    print(f"  [✓] Unstaked successfully! Tx: {tx_hash[:18]}...\n")
+    print_wallet_status(rpc_url, contract, miner_addr)
+
+
+def do_withdraw_to(rpc_url: str, contract: str, private_key: str, recipient: str, amount_frac: float = 0.0) -> None:
+    miner_addr = get_address_from_key(private_key)
+    if not recipient.startswith("0x") or len(recipient) != 42:
+        print(f"  [!] Error: Invalid recipient address '{recipient}'. Must be 42-char 0x... address.")
+        return
+    b = get_wallet_balances(rpc_url, contract, miner_addr)
+    if b["liquid_frac"] <= 0:
+        print(f"  [!] Error: No liquid FRAC available in {miner_addr} to withdraw. (Unstake or claim rewards first).")
+        return
+    if amount_frac <= 0 or amount_frac >= b["liquid_frac"]:
+        target_amount = b["liquid_frac"]
+    else:
+        target_amount = amount_frac
+
+    amt_wei = str(int(target_amount * 1e18))
+    print(f"  [+] Sending {target_amount:,.2f} FRAC from miner {miner_addr} -> {recipient}...")
+    tx_hash = cast_send(rpc_url, private_key, contract, "transfer(address,uint256)", recipient, amt_wei)
+    print(f"  [✓] Withdrawn successfully! Tx: {tx_hash[:18]}...\n")
+    print_wallet_status(rpc_url, contract, miner_addr)
+
+
+def interactive_menu(rpc_url: str, contract: str, private_key: str) -> None:
+    miner_addr = get_address_from_key(private_key)
+    while True:
+        b = print_wallet_status(rpc_url, contract, miner_addr)
+        print("  Select an action:")
+        print("  \033[92m[1]\033[0m ⛏  Start 24/7 Mining (Auto-Stake to Loyalty Pool)")
+        print("  \033[93m[2]\033[0m ⚡ Start 24/7 Mining (Direct Liquid Wallet Payout)")
+        print("  \033[93m[3]\033[0m 💰 Claim Pending Staking Rewards to Wallet")
+        print("  \033[96m[4]\033[0m 🔓 Unstake FRAC from Loyalty Pool to Wallet")
+        print("  \033[92m[5]\033[0m 🚀 Withdraw / Send Liquid FRAC to Another Wallet (MetaMask / Cold Storage)")
+        print("  \033[94m[6]\033[0m 🔄 Refresh Balances")
+        print("  \033[90m[0]\033[0m ❌ Exit")
+        print("\033[96m" + "-" * 68 + "\033[0m")
+        try:
+            choice = input("  Enter choice [0-6]: ").strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\nExiting.")
+            break
+
+        if choice == "1":
+            mine_loop(rpc_url, contract, private_key, max_epochs=0, auto_stake=True)
+        elif choice == "2":
+            mine_loop(rpc_url, contract, private_key, max_epochs=0, auto_stake=False)
+        elif choice == "3":
+            do_claim_rewards(rpc_url, contract, private_key)
+            input("\nPress Enter to continue...")
+        elif choice == "4":
+            print(f"  Current staked balance: {b['staked_frac']:,.2f} FRAC")
+            amt_in = input("  Enter amount of FRAC to unstake [Press Enter for ALL]: ").strip().lower()
+            amt_val = 0.0 if amt_in in ("", "all") else float(amt_in)
+            do_unstake(rpc_url, contract, private_key, amt_val)
+            input("\nPress Enter to continue...")
+        elif choice == "5":
+            print(f"  Current liquid balance: {b['liquid_frac']:,.2f} FRAC")
+            recipient = input("  Enter destination wallet address (0x...): ").strip()
+            if recipient:
+                amt_in = input("  Enter amount of FRAC to send [Press Enter for ALL]: ").strip().lower()
+                amt_val = 0.0 if amt_in in ("", "all") else float(amt_in)
+                do_withdraw_to(rpc_url, contract, private_key, recipient, amt_val)
+            input("\nPress Enter to continue...")
+        elif choice == "6":
+            continue
+        elif choice in ("0", "q", "quit", "exit"):
+            print("Exiting.")
+            break
+
+
 def mine_loop(
     rpc_url: str,
     contract: str,
@@ -241,36 +381,64 @@ def mine_loop(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="FractalPoWToken (FRAC) Old-PC CPU Miner (Base Mainnet)")
+    parser = argparse.ArgumentParser(description="FractalPoWToken (FRAC) Old-PC CPU Miner & Wallet Manager (Base Mainnet)")
     parser.add_argument("--rpc-url", default="https://mainnet.base.org", help="Base Mainnet JSON-RPC URL")
     parser.add_argument(
         "--contract",
-        default="your miner address",
+        default="0x8F92de279E8f942Cb4E37F3A207A221CB5566C04",
         help="Official FractalPoWToken (FRAC) contract address on Base Mainnet",
     )
     parser.add_argument("--private-key", default="", help="Miner wallet private key (or set FRAC_PRIVATE_KEY env var)")
-    parser.add_argument("--epochs", type=int, default=0, help="Number of epochs to mine (0 = continuous 24/7 mining)")
+    parser.add_argument("--epochs", type=int, default=-1, help="Number of epochs to mine (0 = infinite 24/7, -1 = interactive menu)")
     parser.add_argument("--throttle-ms", type=float, default=0.0, help="Sleep ms every 50 nonces to keep old CPUs cool")
     parser.add_argument("--auto-stake", action="store_true", help="Call mineAndStake() to auto-compound rewards")
+    parser.add_argument("--status", action="store_true", help="Display miner wallet balances & rewards and exit")
+    parser.add_argument("--claim-rewards", action="store_true", help="Claim all pending staking rewards to miner wallet")
+    parser.add_argument("--unstake", nargs="?", const="all", default=None, help="Unstake FRAC from loyalty pool (e.g. --unstake 50 or --unstake all)")
+    parser.add_argument("--withdraw-to", default="", help="Destination wallet address to send liquid FRAC to (e.g. --withdraw-to 0x...)")
+    parser.add_argument("--amount", default="all", help="Amount of FRAC to withdraw (default: all)")
+    parser.add_argument("--menu", action="store_true", help="Launch interactive control menu")
     args = parser.parse_args()
 
     priv_key = args.private_key.strip() or os.environ.get("FRAC_PRIVATE_KEY", "").strip()
-    auto_stake = args.auto_stake
     if not priv_key:
-        print("\033[92m=== FRAC STANDALONE OLD-PC CPU MINER SETUP (BASE MAINNET) ===\033[0m")
+        print("\033[92m=== FRAC STANDALONE OLD-PC CPU MINER & WALLET MANAGER ===\033[0m")
         priv_key = input("Enter your Miner Wallet Private Key (0x...): ").strip()
         if not priv_key:
             raise SystemExit("Error: A valid Base Mainnet wallet private key (with ~$0.05 ETH for gas) is required.")
-        if not auto_stake:
-            ans = input("Auto-stake mined FRAC into the 3.5% Loyalty Pool? [Y/n]: ").strip().lower()
-            auto_stake = ans in ("", "y", "yes")
 
-    mine_loop(
-        rpc_url=args.rpc_url,
-        contract=args.contract,
-        private_key=priv_key,
-        max_epochs=args.epochs,
-        throttle_ms=args.throttle_ms,
-        auto_stake=auto_stake,
-    )
+    miner_addr = get_address_from_key(priv_key)
+
+    if args.status:
+        print_wallet_status(args.rpc_url, args.contract, miner_addr)
+        sys.exit(0)
+
+    if args.claim_rewards:
+        do_claim_rewards(args.rpc_url, args.contract, priv_key)
+        sys.exit(0)
+
+    if args.unstake is not None:
+        amt_str = args.unstake.strip().lower()
+        amt_val = 0.0 if amt_str in ("", "all") else float(amt_str)
+        do_unstake(args.rpc_url, args.contract, priv_key, amt_val)
+        sys.exit(0)
+
+    if args.withdraw_to:
+        amt_str = args.amount.strip().lower()
+        amt_val = 0.0 if amt_str in ("", "all") else float(amt_str)
+        do_withdraw_to(args.rpc_url, args.contract, priv_key, args.withdraw_to.strip(), amt_val)
+        sys.exit(0)
+
+    if args.menu or (args.epochs == -1 and not args.auto_stake):
+        interactive_menu(args.rpc_url, args.contract, priv_key)
+    else:
+        epochs = max(args.epochs, 0)
+        mine_loop(
+            rpc_url=args.rpc_url,
+            contract=args.contract,
+            private_key=priv_key,
+            max_epochs=epochs,
+            throttle_ms=args.throttle_ms,
+            auto_stake=args.auto_stake,
+        )
 
