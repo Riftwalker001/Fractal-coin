@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Fractal Coin (FRAC) — Official Liquidity TimeLock Portal</title>
+<link rel="icon" type="image/png" href="FRAC_Logo.png">
+<style>
+  :root {
+    --bg: #09090d;
+    --card: #121218;
+    --card-hover: #181824;
+    --border: #22222d;
+    --red: #ff2a4b;
+    --red-glow: rgba(255, 42, 75, 0.25);
+    --gold: #ffc400;
+    --gold-glow: rgba(255, 196, 0, 0.2);
+    --cyan: #00e5ff;
+    --green: #00e676;
+    --text: #e0e0e6;
+    --muted: #888899;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace, sans-serif;
+    line-height: 1.5;
+    padding: 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand img { width: 50px; height: 50px; border-radius: 50%; box-shadow: 0 0 16px var(--red-glow); }
+  .brand h1 { font-size: 22px; color: #fff; letter-spacing: 0.5px; }
+  .brand h1 span { color: var(--gold); }
+  .brand p { font-size: 13px; color: var(--muted); }
+
+  .network-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 230, 118, 0.1);
+    color: var(--green);
+    border: 1px solid rgba(0, 230, 118, 0.3);
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+  .pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+  }
+
+  .nav-btns { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  button, .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--gold); color: #000; box-shadow: 0 0 12px var(--gold-glow); }
+  .btn-primary:hover { background: #ffe066; }
+  .btn-red { background: var(--red); color: #fff; box-shadow: 0 0 12px var(--red-glow); }
+  .btn-red:hover { background: #ff4763; }
+  .btn-outline { background: #171720; color: var(--text); border-color: var(--border); }
+  .btn-outline:hover { border-color: var(--muted); background: #20202c; }
+  .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
+
+  .box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px;
+    margin: 20px 0;
+  }
+  .box.glow { border-color: rgba(255, 196, 0, 0.3); box-shadow: 0 0 16px rgba(255, 196, 0, 0.08); }
+  .box.green-glow { border-color: rgba(0, 230, 118, 0.35); box-shadow: 0 0 16px rgba(0, 230, 118, 0.08); }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 14px;
+  }
+  .label { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .val { font-size: 22px; font-weight: 800; margin: 4px 0 8px 0; font-family: monospace; }
+
+  .input-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  input, select {
+    flex: 1;
+    min-width: 160px;
+    background: #09090d;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: #fff;
+    padding: 9px 12px;
+    font-size: 13.5px;
+    font-family: inherit;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--gold); }
+
+  .status-msg {
+    margin: 16px 0;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    display: none;
+    line-height: 1.4;
+  }
+  .status-msg.info { background: #0b1a24; border: 1px solid var(--cyan); color: var(--cyan); display: block; }
+  .status-msg.success { background: #0c2014; border: 1px solid var(--green); color: var(--green); display: block; }
+  .status-msg.error { background: #260d13; border: 1px solid var(--red); color: var(--red); display: block; }
+
+  .countdown-box {
+    display: flex;
+    gap: 12px;
+    margin: 14px 0;
+    flex-wrap: wrap;
+  }
+  .time-unit {
+    background: #09090d;
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-align: center;
+    min-width: 75px;
+  }
+  .time-num { font-size: 24px; font-weight: 800; font-family: monospace; color: var(--gold); }
+  .time-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+
+  footer {
+    text-align: center;
+    padding-top: 24px;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    margin-top: 30px;
+  }
+  footer a { color: var(--cyan); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="brand">
+      <img src="FRAC_Logo.png" alt="FRAC Logo">
+      <div>
+        <h1>FRACTAL <span>TIME-LOCK</span> PORTAL <span class="network-badge"><span class="pulse-dot"></span> Base Mainnet</span> <span style="font-size:11px; background:#1b1b26; color:var(--gold); border:1px solid #333346; padding:2px 7px; border-radius:10px; vertical-align:middle;">v1.3 Active</span></h1>
+        <p>100% Free, Trustless & Auditable Liquidity Locking for Fractal Coin (FRAC)</p>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <a class="btn btn-outline" href="index.html">← Back to Main Hub</a>
+      <button id="connectBtn" class="btn-primary" onclick="connectWallet()">Connect MetaMask</button>
+    </div>
+  </header>
+
+  <div id="statusBanner" class="status-msg"></div>
+
+  <!-- LIQUIDITY OVERVIEW -->
+  <div class="box glow">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <h3 style="font-size:16px;">📊 Uniswap V2 LP Pool Status</h3>
+      <a href="https://basescan.org/address/0x7EEc5ad1D6ca2CE83B6BD8C774737726245C3F87" target="_blank" style="font-size:12px; color:var(--cyan); font-family:monospace; text-decoration:none;">0x7EEc...3F87 (Pair Contract) ↗</a>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="label">Total Pool LP Tokens</div>
+        <div class="val" id="totalLpSupply">Loading...</div>
+      </div>
+      <div>
+        <div class="label">Your Wallet LP Balance</div>
+        <div class="val" style="color:var(--green);" id="userLpBal">0.00 LP</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1: LOCKER CONTRACT CONFIGURATION -->
+  <div class="box">
+    <h3 style="font-size:16px;">⚙ 1. Connect or Deploy Fractal Locker Contract</h3>
+    <p style="font-size:12.5px; color:var(--muted); margin-top:2px;">
+      Deploy your own zero-fee, verified TimeLock contract on Base (~$0.02 gas), or connect to an existing one.
+    </p>
+
+    <div class="input-row" style="margin-top:14px;">
+      <input id="lockerAddressInput" type="text" placeholder="Locker Contract Address (0x...)" style="font-family:monospace;">
+      <button class="btn btn-outline" onclick="connectLocker()">Connect Locker</button>
+      <button class="btn btn-primary" onclick="deployLocker()">🚀 Deploy New Locker (~$0.02 gas)</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: LOCK LIQUIDITY ACTION -->
+  <div class="box" id="lockActionBox">
+    <h3 style="font-size:16px; color:var(--gold);">🔒 2. Lock Your Uniswap V2 LP Tokens</h3>
+    <p style="font-size:12.5px; color:var(--muted); margin-top:2px;">
+      Tokens are held in the smart contract until the unlock date. Zero backdoors, zero early withdrawal.
+    </p>
+
+    <div style="margin-top:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <label class="label">Amount of LP Tokens to Lock</label>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-sm btn-outline" onclick="setPercent(80)">Lock 80% (Recommended)</button>
+          <button class="btn btn-sm btn-outline" onclick="setPercent(90)">Lock 90%</button>
+          <button class="btn btn-sm btn-outline" onclick="setPercent(100)">100%</button>
+        </div>
+      </div>
+      <input id="lockAmountInput" type="number" step="any" placeholder="Enter LP amount (e.g. 38.28)">
+    </div>
+
+    <div style="margin-top:14px;">
+      <label class="label" style="margin-bottom:6px; display:block;">Lock Duration</label>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <select id="durationSelect" onchange="updateUnlockDatePreview()">
+          <option value="30">30 Days (Recommended for initial trust)</option>
+          <option value="60">60 Days</option>
+          <option value="90">90 Days</option>
+          <option value="180">180 Days (6 Months)</option>
+          <option value="365">365 Days (1 Year)</option>
+        </select>
+        <span id="unlockDatePreview" style="font-size:12px; color:var(--cyan); align-self:center; font-family:monospace;"></span>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <label class="label" style="margin-bottom:6px; display:block;">Beneficiary Address (Wallet entitled to withdraw when lock expires)</label>
+      <input id="beneficiaryInput" type="text" placeholder="0x... (Defaults to your connected wallet)" style="font-family:monospace;">
+    </div>
+
+    <div class="input-row" style="margin-top:20px;">
+      <button id="approveBtn" class="btn btn-outline" style="flex:1;" onclick="approveLp()">1. Approve LP Tokens</button>
+      <button id="lockBtn" class="btn btn-primary" style="flex:1;" onclick="executeLock()">2. Lock Liquidity</button>
+    </div>
+  </div>
+
+  <!-- ACTIVE LOCKS CARD -->
+  <div class="box green-glow" id="activeLockCard" style="display:none;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:20px;">🛡</span>
+        <h3 style="font-size:16px; color:var(--green);">Active Liquidity TimeLock (Verified On-Chain)</h3>
+      </div>
+      <a id="lockBasescanLink" href="#" target="_blank" style="font-size:12px; color:var(--cyan); text-decoration:none;">View on BaseScan ↗</a>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="label">Locked LP Amount</div>
+        <div class="val" style="color:var(--gold);" id="displayLockedAmt">...</div>
+        <div style="font-size:12px; color:var(--muted);" id="displayLockedPercent">...</div>
+      </div>
+      <div>
+        <div class="label">Unlock Date</div>
+        <div class="val" style="font-size:18px;" id="displayUnlockDate">...</div>
+        <div style="font-size:12px; color:var(--muted); font-family:monospace;" id="displayBeneficiary">...</div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div class="label" style="margin-bottom:8px;">Time Remaining Until Unlock</div>
+      <div class="countdown-box">
+        <div class="time-unit"><div class="time-num" id="cdDays">00</div><div class="time-lbl">Days</div></div>
+        <div class="time-unit"><div class="time-num" id="cdHours">00</div><div class="time-lbl">Hours</div></div>
+        <div class="time-unit"><div class="time-num" id="cdMinutes">00</div><div class="time-lbl">Minutes</div></div>
+        <div class="time-unit"><div class="time-num" id="cdSeconds">00</div><div class="time-lbl">Seconds</div></div>
+      </div>
+    </div>
+
+    <div class="input-row" style="margin-top:16px;">
+      <button class="btn btn-outline" onclick="promptExtendLock()">➕ Extend Lock Duration</button>
+      <button class="btn btn-outline" id="withdrawBtn" disabled onclick="withdrawTokens()">🔓 Withdraw Tokens (Only After Unlock)</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>
+      Official Contract: <a href="https://basescan.org/token/0x8F92de279E8f942Cb4E37F3A207A221CB5566C04" target="_blank">0x8F92de279E8f942Cb4E37F3A207A221CB5566C04</a> |
+      <a href="https://basescan.org/address/0x7EEc5ad1D6ca2CE83B6BD8C774737726245C3F87" target="_blank">Uniswap V2 Pair</a> |
+      <a href="index.html">Mining & Staking Hub</a>
+    </p>
+    <p style="margin-top:6px;">Decentralized, non-custodial time-lock architecture on Base Mainnet. Zero middleman fees.</p>
+  </footer>
+
+</div>
+
+<script>
+const LP_TOKEN_ADDRESS = "0x7EEc5ad1D6ca2CE83B6BD8C774737726245C3F87";
+const LOCKER_BYTECODE = "0x608060405234801561000f575f80fd5b5060015f55610af0806100215f395ff3fe608060405234801561000f575f80fd5b50600436106100b1575f3560e01c80639a76d1fc1161006e5780639a76d1fc146101495780639b10b6f51461015c578063d68f4dd114610165578063f4dadc6114610202578063f6aacfb11461025c578063ff6698791461027f575f80fd5b8063070d66bf146100b55780630852c9ea146100ca5780630c64a7f2146100f0578063107bf5921461010357806324ba88b7146101235780632e1a7d4d14610136575b5f80fd5b6100c86100c336600461095c565b610292565b005b6100dd6100d8366004610997565b610371565b6040519081526020015b60405180910390f35b6100dd6100fe3660046109da565b610547565b6101166101113660046109f1565b61058f565b6040516100e79190610a0a565b6101166101313660046109f1565b6105f8565b6100c86101443660046109da565b61065f565b6100dd610157366004610a4d565b6107a9565b6100dd60015481565b6101c06101733660046109da565b5f90815260026020819052604090912080546001820154928201546003830154600484015460058501546006909501546001600160a01b0394851697949096169592949193909260ff1690565b604080516001600160a01b039889168152979096166020880152948601939093526060850191909152608084015260a0830152151560c082015260e0016100e7565b6101c06102103660046109da565b600260208190525f918252604090912080546001820154928201546003830154600484015460058501546006909501546001600160a01b03948516969094169492939192909160ff1687565b61026f61026a3660046109da565b6107d4565b60405190151581526020016100e7565b6100dd61028d366004610a4d565b61080c565b5f828152600260208190526040909120908101541580156102b75750600681015460ff165b156102d557604051636086ee6f60e11b815260040160405180910390fd5b60018101546001600160a01b031633146103025760405163644d871f60e01b815260040160405180910390fd5b80600501548211610326576040516352aba6d360e11b815260040160405180910390fd5b60058101805490839055604080518281526020810185905285917f12c0f64f942f99aa5210c23a8ab729735389400457b66b06895b0700315c3b33910160405180910390a250505050565b5f61037a610825565b835f0361039a5760405163162908e360e11b815260040160405180910390fd5b4283116103ba576040516352aba6d360e11b815260040160405180910390fd5b6001600160a01b0382166103cc573391505b60015f81546103da90610a89565b91829055506040805160e0810182526001600160a01b0380891680835286821660208085018281528587018c8152606087018d8152426080890190815260a089018e81525f60c08b018181528d825260028089528d83209c518d54908d166001600160a01b0319918216178e55975160018e8101805492909e169190991617909b559451998b019990995591516003808b019190915590516004808b0191909155915160058a015591516006909801805498151560ff199099169890981790975592855291815285842080548084018255908552818520018790558284529384529382208054948501815582529190209091018290559091506104df9033308761084d565b816001600160a01b0316856001600160a01b0316827f355bc3efe6889db236cf9358375711e881d301bc5a1a43aa24b3d37e073b950b878760405161052e929190918252602082015260400190565b60405180910390a461053f60015f55565b949350505050565b5f818152600260205260408120600681015460ff168061056b575080600501544210155b1561057857505f92915050565b4281600501546105889190610aa1565b9392505050565b6001600160a01b0381165f908152600360209081526040918290208054835181840281018401909452808452606093928301828280156105ec57602002820191905f5260205f20905b8154815260200190600101908083116105d8575b50505050509050919050565b6001600160a01b0381165f908152600460209081526040918290208054835181840281018401909452808452606093928301828280156105ec57602002820191905f5260205f20908154815260200190600101908083116105d85750505050509050919050565b610667610825565b5f81815260026020819052604090912090810154158061068b5750600681015460ff165b156106a957604051636507689f60e01b815260040160405180910390fd5b60018101546001600160a01b031633146106d65760405163644d871f60e01b815260040160405180910390fd5b8060050154421015610717574281600501546106f29190610aa1565b604051630b5c15df60e11b815260040161070e91815260200190565b60405180910390fd5b6002810180545f90915560068201805460ff19166001908117909155820154825461074f916001600160a01b039182169116836108ba565b600182015482546040518381526001600160a01b03928316929091169085907ff9c80fffede54cc9d8066ec75e2427dc3863957bc3de78bcea60550de76fee1d9060200160405180910390a450506107a660015f55565b50565b6004602052815f5260405f2081815481106107c2575f80fd5b905f5260205f20015f91509150505481565b5f818152600260205260408120600681015460ff161580156107f957505f8160020154115b8015610588575060050154421092915050565b6003602052815f5260405f2081815481106107c2575f80fd5b60025f540361084757604051633ee5aeb560e01b815260040160405180910390fd5b60025f55565b6040516001600160a01b0384811660248301528381166044830152606482018390526108b49186918216906323b872dd906084015b604051602081830303815290604052915060e01b6020820180516001600160e01b0383818316178352505050506108f0565b50505050565b6040516001600160a01b038381166024830152604482018390526108eb91859182169063a9059cbb90606401610882565b505050565b5f8060205f8451602086015f885af18061090f576040513d5f823e3d81fd5b50505f513d91508115610926578060011415610933565b6001600160a01b0384163b155b156108b457604051635274afe760e01b81526001600160a01b038516600482015260240161070e565b5f806040838503121561096d575f80fd5b50508035926020909101359150565b80356001600160a01b0381168114610992575f80fd5b919050565b5f805f80608085870312156109aa575f80fd5b6109b38561097c565b935060208501359250604085013591506109cf6060860161097c565b905092959194509250565b5f602082840312156109ea575f80fd5b5035919050565b5f60208284031215610a01575f80fd5b6105888261097c565b602080825282518282018190525f9190848201906040850190845b81811015610a4157835183529284019291840191600101610a25565b50909695505050505050565b5f8060408385031215610a5e575f80fd5b610a678361097c565b946020939093013593505050565b634e487b7160e01b5f52601160045260245ffd5b5f60018201610a9a57610a9a610a75565b5060010190565b81810381811115610ab457610ab4610a75565b9291505056fea26469706673582212200e82ee0808235cb7a946ec1db795c376af09a3b18862706bb21b55782d1b607164736f6c63430008180033";
+
+// Multi-RPC failover pool
+const RPC_ENDPOINTS = [
+  "https://base-rpc.publicnode.com",
+  "https://mainnet.base.org",
+  "https://1rpc.io/base"
+];
+let rpcIndex = 0;
+
+let userAccount = null;
+let currentLockerAddress = localStorage.getItem("frac_lp_locker_address") || "";
+let rawUserLp = 0;
+let rawTotalLp = 0;
+let activeLockId = 1;
+let countdownTimer = null;
+
+function showStatus(msg, type) {
+  type = type || "info";
+  const banner = document.getElementById("statusBanner");
+  banner.className = "status-msg " + type;
+  banner.textContent = msg;
+  banner.style.display = "block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  setTimeout(function() { banner.style.display = "none"; }, 10000);
+}
+
+function getProvider() {
+  if (typeof window.ethereum !== "undefined") {
+    if (window.ethereum.providers && window.ethereum.providers.length) {
+      for (var i = 0; i < window.ethereum.providers.length; i++) {
+        var p = window.ethereum.providers[i];
+        if (p.isMetaMask) return p;
+      }
+      return window.ethereum.providers[0];
+    }
+    return window.ethereum;
+  }
+  return null;
+}
+
+async function rpcCall(to, data) {
+  for (var attempt = 0; attempt < RPC_ENDPOINTS.length; attempt++) {
+    var ep = RPC_ENDPOINTS[(rpcIndex + attempt) % RPC_ENDPOINTS.length];
+    try {
+      var resp = await fetch(ep, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: Math.floor(Math.random() * 100000),
+          method: "eth_call",
+          params: [{ to: to, data: data }, "latest"]
+        })
+      });
+      if (!resp.ok) continue;
+      var res = await resp.json();
+      if (res && res.result && res.result !== "0x") {
+        rpcIndex = (rpcIndex + attempt) % RPC_ENDPOINTS.length;
+        return res.result;
+      }
+    } catch (e) {
+      // try next RPC endpoint
+    }
+  }
+  return "0x0";
+}
+
+async function connectWallet() {
+  var provider = getProvider();
+  if (!provider) {
+    showStatus("MetaMask or a Web3 wallet is required. If running locally, open live GitHub link or enable 'Allow access to file URLs' in extension settings.", "error");
+    return;
+  }
+
+  var btn = document.getElementById("connectBtn");
+  btn.textContent = "Connecting...";
+
+  try {
+    var accounts;
+    if (provider.request) {
+      accounts = await provider.request({ method: "eth_requestAccounts" });
+    } else if (provider.enable) {
+      accounts = await provider.enable();
+    }
+
+    if (!accounts || accounts.length === 0) {
+      btn.textContent = "Connect MetaMask";
+      showStatus("No accounts returned. Please unlock your wallet.", "error");
+      return;
+    }
+
+    userAccount = accounts[0];
+    btn.textContent = userAccount.slice(0, 6) + "..." + userAccount.slice(-4);
+    document.getElementById("beneficiaryInput").value = userAccount;
+
+    // Check Chain ID
+    try {
+      var chainId = await provider.request({ method: "eth_chainId" });
+      if (parseInt(chainId, 16) !== 8453) {
+        try {
+          await provider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x2105" }]
+          });
+        } catch (switchError) {
+          if (switchError.code === 4902) {
+            await provider.request({
+              method: "wallet_addEthereumChain",
+              params: [{
+                chainId: "0x2105",
+                chainName: "Base Mainnet",
+                rpcUrls: ["https://mainnet.base.org"],
+                nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+                blockExplorerUrls: ["https://basescan.org"]
+              }]
+            });
+          }
+        }
+      }
+    } catch (chainErr) {
+      console.warn("Chain switch note:", chainErr);
+    }
+
+    showStatus("Connected: " + userAccount.slice(0, 8) + "...", "success");
+    await refreshLpStats();
+    if (currentLockerAddress) {
+      await loadLocker(currentLockerAddress);
+    }
+  } catch (e) {
+    btn.textContent = "Connect MetaMask";
+    if (e.code === -32002) {
+      showStatus("Connection request is already pending. Please click the fox icon in your browser toolbar to approve.", "info");
+    } else if (e.code === 4001) {
+      showStatus("Connection request was cancelled in wallet.", "info");
+    } else {
+      showStatus(e.message || "Could not connect wallet.", "error");
+    }
+  }
+}
+
+async function refreshLpStats() {
+  try {
+    // Total supply of LP (0x18160ddd)
+    var supplyHex = await rpcCall(LP_TOKEN_ADDRESS, "0x18160ddd");
+    if (supplyHex && supplyHex !== "0x0") {
+      rawTotalLp = Number(BigInt(supplyHex)) / 1e18;
+      document.getElementById("totalLpSupply").textContent = rawTotalLp.toFixed(4) + " LP";
+    }
+
+    if (userAccount) {
+      var paddedUser = userAccount.toLowerCase().replace("0x", "").padStart(64, "0");
+      // balanceOf(address) (0x70a08231)
+      var balHex = await rpcCall(LP_TOKEN_ADDRESS, "0x70a08231" + paddedUser);
+      if (balHex && balHex !== "0x0") {
+        rawUserLp = Number(BigInt(balHex)) / 1e18;
+        document.getElementById("userLpBal").textContent = rawUserLp.toFixed(4) + " LP";
+      }
+    }
+  } catch (err) {
+    console.error("Error loading LP stats:", err);
+  }
+}
+
+function setPercent(pct) {
+  if (!rawUserLp || rawUserLp <= 0) {
+    return showStatus("No LP tokens detected in connected wallet.", "info");
+  }
+  var amt = (rawUserLp * pct) / 100;
+  document.getElementById("lockAmountInput").value = amt.toFixed(6);
+}
+
+function updateUnlockDatePreview() {
+  var days = parseInt(document.getElementById("durationSelect").value);
+  var future = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+  document.getElementById("unlockDatePreview").textContent = "➔ Unlocks on: " + future.toLocaleDateString() + " " + future.toLocaleTimeString();
+}
+
+async function deployLocker() {
+  var provider = getProvider();
+  if (!userAccount) await connectWallet();
+  if (!userAccount || !provider) return;
+
+  try {
+    showStatus("Please confirm contract deployment in MetaMask (~$0.02 Base gas)...", "info");
+    var txHash = await provider.request({
+      method: "eth_sendTransaction",
+      params: [{
+        from: userAccount,
+        data: LOCKER_BYTECODE
+      }]
+    });
+
+    showStatus("Locker deployment submitted! Tx: " + txHash.slice(0, 10) + "... Waiting for confirmation...", "info");
+
+    for (var i = 0; i < 30; i++) {
+      await new Promise(function(r) { setTimeout(r, 2000); });
+      var res = await provider.request({
+        method: "eth_getTransactionReceipt",
+        params: [txHash]
+      });
+      if (res && res.contractAddress) {
+        var deployedAddr = res.contractAddress;
+        currentLockerAddress = deployedAddr;
+        localStorage.setItem("frac_lp_locker_address", deployedAddr);
+        document.getElementById("lockerAddressInput").value = deployedAddr;
+        showStatus("FractalLPLocker deployed at " + deployedAddr + "!", "success");
+        await loadLocker(deployedAddr);
+        break;
+      }
+    }
+  } catch (e) {
+    showStatus("Deployment error: " + (e.message || e), "error");
+  }
+}
+
+async function connectLocker() {
+  var addr = document.getElementById("lockerAddressInput").value.trim();
+  if (!/^0x[a-fA-F0-9]{40}$/.test(addr)) {
+    return showStatus("Please enter a valid 0x locker contract address.", "error");
+  }
+  currentLockerAddress = addr;
+  localStorage.setItem("frac_lp_locker_address", addr);
+  showStatus("Connected to Locker: " + addr, "success");
+  await loadLocker(addr);
+}
+
+async function loadLocker(addr) {
+  try {
+    // lockCount() -> 0x9b10b6f5
+    var resHex = await rpcCall(addr, "0x9b10b6f5");
+    if (!resHex || resHex === "0x0") return;
+    var count = parseInt(resHex, 16);
+
+    if (count > 0) {
+      activeLockId = count;
+      // getLock(uint256) -> 0xd68f4dd1
+      var lockIdHex = count.toString(16).padStart(64, "0");
+      var dataLock = await rpcCall(addr, "0xd68f4dd1" + lockIdHex);
+      if (!dataLock || dataLock === "0x0") return;
+      var rawHex = dataLock.replace("0x", "");
+      
+      var token = "0x" + rawHex.slice(24, 64);
+      var beneficiary = "0x" + rawHex.slice(64 + 24, 128);
+      var amount = Number(BigInt("0x" + rawHex.slice(128, 192))) / 1e18;
+      var unlockTs = parseInt(rawHex.slice(320, 384), 16);
+      var isWithdrawn = parseInt(rawHex.slice(384, 448), 16) === 1;
+
+      displayActiveLock(addr, amount, unlockTs, beneficiary, isWithdrawn);
+    }
+  } catch (e) {
+    console.error("Locker check error:", e);
+  }
+}
+
+function displayActiveLock(lockerAddr, amount, unlockTs, beneficiary, isWithdrawn) {
+  var card = document.getElementById("activeLockCard");
+  card.style.display = "block";
+  document.getElementById("lockBasescanLink").href = "https://basescan.org/address/" + lockerAddr;
+  document.getElementById("displayLockedAmt").textContent = amount.toFixed(4) + " LP";
+  
+  var pct = rawTotalLp > 0 ? ((amount / rawTotalLp) * 100).toFixed(2) : "--";
+  document.getElementById("displayLockedPercent").textContent = "(" + pct + "% of total Uniswap pool locked)";
+
+  var unlockDate = new Date(unlockTs * 1000);
+  document.getElementById("displayUnlockDate").textContent = unlockDate.toLocaleDateString() + " " + unlockDate.toLocaleTimeString();
+  document.getElementById("displayBeneficiary").textContent = "Beneficiary: " + beneficiary;
+
+  if (countdownTimer) clearInterval(countdownTimer);
+  updateCountdown(unlockTs);
+  countdownTimer = setInterval(function() { updateCountdown(unlockTs); }, 1000);
+
+  if (Date.now() >= unlockTs * 1000 && !isWithdrawn) {
+    document.getElementById("withdrawBtn").removeAttribute("disabled");
+  }
+}
+
+function updateCountdown(unlockTs) {
+  var now = Math.floor(Date.now() / 1000);
+  var diff = unlockTs - now;
+
+  if (diff <= 0) {
+    document.getElementById("cdDays").textContent = "00";
+    document.getElementById("cdHours").textContent = "00";
+    document.getElementById("cdMinutes").textContent = "00";
+    document.getElementById("cdSeconds").textContent = "00";
+    document.getElementById("withdrawBtn").removeAttribute("disabled");
+    return;
+  }
+
+  var days = Math.floor(diff / (24 * 3600));
+  var hours = Math.floor((diff % (24 * 3600)) / 3600);
+  var mins = Math.floor((diff % 3600) / 60);
+  var secs = diff % 60;
+
+  document.getElementById("cdDays").textContent = String(days).padStart(2, '0');
+  document.getElementById("cdHours").textContent = String(hours).padStart(2, '0');
+  document.getElementById("cdMinutes").textContent = String(mins).padStart(2, '0');
+  document.getElementById("cdSeconds").textContent = String(secs).padStart(2, '0');
+}
+
+async function approveLp() {
+  var provider = getProvider();
+  if (!userAccount) await connectWallet();
+  if (!currentLockerAddress) return showStatus("Deploy or connect a locker contract first!", "error");
+  var amtStr = document.getElementById("lockAmountInput").value;
+  if (!amtStr || parseFloat(amtStr) <= 0) return showStatus("Enter a valid LP amount to lock.", "error");
+
+  try {
+    showStatus("Please confirm LP token approval in MetaMask...", "info");
+    var wei = BigInt(Math.floor(parseFloat(amtStr) * 1e18)).toString(16).padStart(64, "0");
+    var lockerPadded = currentLockerAddress.toLowerCase().replace("0x", "").padStart(64, "0");
+    var data = "0x095ea7b3" + lockerPadded + wei; // approve(address,uint256)
+
+    var txHash = await provider.request({
+      method: "eth_sendTransaction",
+      params: [{ from: userAccount, to: LP_TOKEN_ADDRESS, data: data }]
+    });
+    showStatus("Approval transaction submitted! Tx: " + txHash.slice(0, 10) + "...", "success");
+  } catch (e) {
+    showStatus("Approval error: " + (e.message || e), "error");
+  }
+}
+
+async function executeLock() {
+  var provider = getProvider();
+  if (!userAccount) await connectWallet();
+  if (!currentLockerAddress) return showStatus("Deploy or connect a locker contract first!", "error");
+
+  var amtStr = document.getElementById("lockAmountInput").value;
+  if (!amtStr || parseFloat(amtStr) <= 0) return showStatus("Enter a valid LP amount to lock.", "error");
+
+  var days = parseInt(document.getElementById("durationSelect").value);
+  var unlockTs = Math.floor(Date.now() / 1000) + days * 24 * 60 * 60;
+
+  var beneficiary = document.getElementById("beneficiaryInput").value.trim();
+  if (!beneficiary || !/^0x[a-fA-F0-9]{40}$/.test(beneficiary)) {
+    beneficiary = userAccount;
+  }
+
+  try {
+    showStatus("Please confirm Lock transaction in MetaMask...", "info");
+    var tokenPadded = LP_TOKEN_ADDRESS.toLowerCase().replace("0x", "").padStart(64, "0");
+    var amtHex = BigInt(Math.floor(parseFloat(amtStr) * 1e18)).toString(16).padStart(64, "0");
+    var tsHex = unlockTs.toString(16).padStart(64, "0");
+    var benPadded = beneficiary.toLowerCase().replace("0x", "").padStart(64, "0");
+
+    // lock(address,uint256,uint256,address) -> 0x0852c9ea
+    var selector = "0x0852c9ea";
+    var data = selector + tokenPadded + amtHex + tsHex + benPadded;
+
+    var txHash = await provider.request({
+      method: "eth_sendTransaction",
+      params: [{ from: userAccount, to: currentLockerAddress, data: data }]
+    });
+
+    showStatus("Lock transaction submitted! Tx: " + txHash.slice(0, 10) + "...", "success");
+    setTimeout(function() { loadLocker(currentLockerAddress); refreshLpStats(); }, 5000);
+  } catch (e) {
+    showStatus("Lock error: " + (e.message || e), "error");
+  }
+}
+
+// Initial preview and load
+updateUnlockDatePreview();
+refreshLpStats();
+setInterval(refreshLpStats, 4000); // Auto-update pool and wallet stats every 4s
+
+if (currentLockerAddress) {
+  document.getElementById("lockerAddressInput").value = currentLockerAddress;
+  loadLocker(currentLockerAddress);
+}
+</script>
+</body>
+</html>

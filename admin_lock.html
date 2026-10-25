@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Fractal Coin (FRAC) — Official Liquidity TimeLock Portal</title>
 <link rel="icon" type="image/png" href="FRAC_Logo.png">
 <style>
@@ -66,7 +69,7 @@
     box-shadow: 0 0 8px var(--green);
   }
 
-  .nav-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  .nav-btns { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
   button, .btn {
     display: inline-flex;
     align-items: center;
@@ -168,7 +171,7 @@
     <div class="brand">
       <img src="FRAC_Logo.png" alt="FRAC Logo">
       <div>
-        <h1>FRACTAL <span>TIME-LOCK</span> PORTAL <span class="network-badge"><span class="pulse-dot"></span> Base Mainnet</span></h1>
+        <h1>FRACTAL <span>TIME-LOCK</span> PORTAL <span class="network-badge"><span class="pulse-dot"></span> Base Mainnet</span> <span style="font-size:11px; background:#1b1b26; color:var(--gold); border:1px solid #333346; padding:2px 7px; border-radius:10px; vertical-align:middle;">v1.3 Active</span></h1>
         <p>100% Free, Trustless & Auditable Liquidity Locking for Fractal Coin (FRAC)</p>
       </div>
     </div>
@@ -311,7 +314,7 @@
 const LP_TOKEN_ADDRESS = "0x7EEc5ad1D6ca2CE83B6BD8C774737726245C3F87";
 const LOCKER_BYTECODE = "0x608060405234801561000f575f80fd5b5060015f55610af0806100215f395ff3fe608060405234801561000f575f80fd5b50600436106100b1575f3560e01c80639a76d1fc1161006e5780639a76d1fc146101495780639b10b6f51461015c578063d68f4dd114610165578063f4dadc6114610202578063f6aacfb11461025c578063ff6698791461027f575f80fd5b8063070d66bf146100b55780630852c9ea146100ca5780630c64a7f2146100f0578063107bf5921461010357806324ba88b7146101235780632e1a7d4d14610136575b5f80fd5b6100c86100c336600461095c565b610292565b005b6100dd6100d8366004610997565b610371565b6040519081526020015b60405180910390f35b6100dd6100fe3660046109da565b610547565b6101166101113660046109f1565b61058f565b6040516100e79190610a0a565b6101166101313660046109f1565b6105f8565b6100c86101443660046109da565b61065f565b6100dd610157366004610a4d565b6107a9565b6100dd60015481565b6101c06101733660046109da565b5f90815260026020819052604090912080546001820154928201546003830154600484015460058501546006909501546001600160a01b0394851697949096169592949193909260ff1690565b604080516001600160a01b039889168152979096166020880152948601939093526060850191909152608084015260a0830152151560c082015260e0016100e7565b6101c06102103660046109da565b600260208190525f918252604090912080546001820154928201546003830154600484015460058501546006909501546001600160a01b03948516969094169492939192909160ff1687565b61026f61026a3660046109da565b6107d4565b60405190151581526020016100e7565b6100dd61028d366004610a4d565b61080c565b5f828152600260208190526040909120908101541580156102b75750600681015460ff165b156102d557604051636086ee6f60e11b815260040160405180910390fd5b60018101546001600160a01b031633146103025760405163644d871f60e01b815260040160405180910390fd5b80600501548211610326576040516352aba6d360e11b815260040160405180910390fd5b60058101805490839055604080518281526020810185905285917f12c0f64f942f99aa5210c23a8ab729735389400457b66b06895b0700315c3b33910160405180910390a250505050565b5f61037a610825565b835f0361039a5760405163162908e360e11b815260040160405180910390fd5b4283116103ba576040516352aba6d360e11b815260040160405180910390fd5b6001600160a01b0382166103cc573391505b60015f81546103da90610a89565b91829055506040805160e0810182526001600160a01b0380891680835286821660208085018281528587018c8152606087018d8152426080890190815260a089018e81525f60c08b018181528d825260028089528d83209c518d54908d166001600160a01b0319918216178e55975160018e8101805492909e169190991617909b559451998b019990995591516003808b019190915590516004808b0191909155915160058a015591516006909801805498151560ff199099169890981790975592855291815285842080548084018255908552818520018790558284529384529382208054948501815582529190209091018290559091506104df9033308761084d565b816001600160a01b0316856001600160a01b0316827f355bc3efe6889db236cf9358375711e881d301bc5a1a43aa24b3d37e073b950b878760405161052e929190918252602082015260400190565b60405180910390a461053f60015f55565b949350505050565b5f818152600260205260408120600681015460ff168061056b575080600501544210155b1561057857505f92915050565b4281600501546105889190610aa1565b9392505050565b6001600160a01b0381165f908152600360209081526040918290208054835181840281018401909452808452606093928301828280156105ec57602002820191905f5260205f20905b8154815260200190600101908083116105d8575b50505050509050919050565b6001600160a01b0381165f908152600460209081526040918290208054835181840281018401909452808452606093928301828280156105ec57602002820191905f5260205f20908154815260200190600101908083116105d85750505050509050919050565b610667610825565b5f81815260026020819052604090912090810154158061068b5750600681015460ff165b156106a957604051636507689f60e01b815260040160405180910390fd5b60018101546001600160a01b031633146106d65760405163644d871f60e01b815260040160405180910390fd5b8060050154421015610717574281600501546106f29190610aa1565b604051630b5c15df60e11b815260040161070e91815260200190565b60405180910390fd5b6002810180545f90915560068201805460ff19166001908117909155820154825461074f916001600160a01b039182169116836108ba565b600182015482546040518381526001600160a01b03928316929091169085907ff9c80fffede54cc9d8066ec75e2427dc3863957bc3de78bcea60550de76fee1d9060200160405180910390a450506107a660015f55565b50565b6004602052815f5260405f2081815481106107c2575f80fd5b905f5260205f20015f91509150505481565b5f818152600260205260408120600681015460ff161580156107f957505f8160020154115b8015610588575060050154421092915050565b6003602052815f5260405f2081815481106107c2575f80fd5b60025f540361084757604051633ee5aeb560e01b815260040160405180910390fd5b60025f55565b6040516001600160a01b0384811660248301528381166044830152606482018390526108b49186918216906323b872dd906084015b604051602081830303815290604052915060e01b6020820180516001600160e01b0383818316178352505050506108f0565b50505050565b6040516001600160a01b038381166024830152604482018390526108eb91859182169063a9059cbb90606401610882565b505050565b5f8060205f8451602086015f885af18061090f576040513d5f823e3d81fd5b50505f513d91508115610926578060011415610933565b6001600160a01b0384163b155b156108b457604051635274afe760e01b81526001600160a01b038516600482015260240161070e565b5f806040838503121561096d575f80fd5b50508035926020909101359150565b80356001600160a01b0381168114610992575f80fd5b919050565b5f805f80608085870312156109aa575f80fd5b6109b38561097c565b935060208501359250604085013591506109cf6060860161097c565b905092959194509250565b5f602082840312156109ea575f80fd5b5035919050565b5f60208284031215610a01575f80fd5b6105888261097c565b602080825282518282018190525f9190848201906040850190845b81811015610a4157835183529284019291840191600101610a25565b50909695505050505050565b5f8060408385031215610a5e575f80fd5b610a678361097c565b946020939093013593505050565b634e487b7160e01b5f52601160045260245ffd5b5f60018201610a9a57610a9a610a75565b5060010190565b81810381811115610ab457610ab4610a75565b9291505056fea26469706673582212200e82ee0808235cb7a946ec1db795c376af09a3b18862706bb21b55782d1b607164736f6c63430008180033";
 
-// Multi-RPC endpoints for 100% browser fetch uptime
+// Multi-RPC failover pool
 const RPC_ENDPOINTS = [
   "https://base-rpc.publicnode.com",
   "https://mainnet.base.org",
@@ -332,13 +335,18 @@ function showStatus(msg, type) {
   banner.className = "status-msg " + type;
   banner.textContent = msg;
   banner.style.display = "block";
-  setTimeout(function() { banner.style.display = "none"; }, 9000);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  setTimeout(function() { banner.style.display = "none"; }, 10000);
 }
 
 function getProvider() {
-  if (window.ethereum) {
+  if (typeof window.ethereum !== "undefined") {
     if (window.ethereum.providers && window.ethereum.providers.length) {
-      return window.ethereum.providers.find(function(p) { return p.isMetaMask; }) || window.ethereum.providers[0];
+      for (var i = 0; i < window.ethereum.providers.length; i++) {
+        var p = window.ethereum.providers[i];
+        if (p.isMetaMask) return p;
+      }
+      return window.ethereum.providers[0];
     }
     return window.ethereum;
   }
@@ -346,10 +354,10 @@ function getProvider() {
 }
 
 async function rpcCall(to, data) {
-  for (let attempt = 0; attempt < RPC_ENDPOINTS.length; attempt++) {
-    const ep = RPC_ENDPOINTS[(rpcIndex + attempt) % RPC_ENDPOINTS.length];
+  for (var attempt = 0; attempt < RPC_ENDPOINTS.length; attempt++) {
+    var ep = RPC_ENDPOINTS[(rpcIndex + attempt) % RPC_ENDPOINTS.length];
     try {
-      const resp = await fetch(ep, {
+      var resp = await fetch(ep, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -360,37 +368,49 @@ async function rpcCall(to, data) {
         })
       });
       if (!resp.ok) continue;
-      const res = await resp.json();
+      var res = await resp.json();
       if (res && res.result && res.result !== "0x") {
         rpcIndex = (rpcIndex + attempt) % RPC_ENDPOINTS.length;
         return res.result;
       }
     } catch (e) {
-      // try next
+      // try next RPC endpoint
     }
   }
   return "0x0";
 }
 
 async function connectWallet() {
-  const provider = getProvider();
+  var provider = getProvider();
   if (!provider) {
-    showStatus("MetaMask or a Web3 wallet is required. If running locally, please open the live GitHub link or enable 'Allow access to file URLs' in extension settings.", "error");
+    showStatus("MetaMask or a Web3 wallet is required. If running locally, open live GitHub link or enable 'Allow access to file URLs' in extension settings.", "error");
     return;
   }
+
+  var btn = document.getElementById("connectBtn");
+  btn.textContent = "Connecting...";
+
   try {
-    const accounts = await provider.request({ method: "eth_requestAccounts" });
+    var accounts;
+    if (provider.request) {
+      accounts = await provider.request({ method: "eth_requestAccounts" });
+    } else if (provider.enable) {
+      accounts = await provider.enable();
+    }
+
     if (!accounts || accounts.length === 0) {
-      showStatus("No accounts found in wallet.", "error");
+      btn.textContent = "Connect MetaMask";
+      showStatus("No accounts returned. Please unlock your wallet.", "error");
       return;
     }
+
     userAccount = accounts[0];
-    document.getElementById("connectBtn").textContent = userAccount.slice(0, 6) + "..." + userAccount.slice(-4);
+    btn.textContent = userAccount.slice(0, 6) + "..." + userAccount.slice(-4);
     document.getElementById("beneficiaryInput").value = userAccount;
 
-    // Check Chain ID (Base Mainnet: 8453 / 0x2105)
+    // Check Chain ID
     try {
-      const chainId = await provider.request({ method: "eth_chainId" });
+      var chainId = await provider.request({ method: "eth_chainId" });
       if (parseInt(chainId, 16) !== 8453) {
         try {
           await provider.request({
@@ -413,7 +433,7 @@ async function connectWallet() {
         }
       }
     } catch (chainErr) {
-      console.warn("Chain switch error:", chainErr);
+      console.warn("Chain switch note:", chainErr);
     }
 
     showStatus("Connected: " + userAccount.slice(0, 8) + "...", "success");
@@ -422,10 +442,11 @@ async function connectWallet() {
       await loadLocker(currentLockerAddress);
     }
   } catch (e) {
+    btn.textContent = "Connect MetaMask";
     if (e.code === -32002) {
-      showStatus("Connection request already pending in MetaMask. Please click your extension icon to approve.", "info");
-    } else if (e.code === 401) {
-      showStatus("Connection request was cancelled.", "info");
+      showStatus("Connection request is already pending. Please click the fox icon in your browser toolbar to approve.", "info");
+    } else if (e.code === 4001) {
+      showStatus("Connection request was cancelled in wallet.", "info");
     } else {
       showStatus(e.message || "Could not connect wallet.", "error");
     }
@@ -435,16 +456,16 @@ async function connectWallet() {
 async function refreshLpStats() {
   try {
     // Total supply of LP (0x18160ddd)
-    const supplyHex = await rpcCall(LP_TOKEN_ADDRESS, "0x18160ddd");
+    var supplyHex = await rpcCall(LP_TOKEN_ADDRESS, "0x18160ddd");
     if (supplyHex && supplyHex !== "0x0") {
       rawTotalLp = Number(BigInt(supplyHex)) / 1e18;
       document.getElementById("totalLpSupply").textContent = rawTotalLp.toFixed(4) + " LP";
     }
 
     if (userAccount) {
-      const paddedUser = userAccount.toLowerCase().replace("0x", "").padStart(64, "0");
+      var paddedUser = userAccount.toLowerCase().replace("0x", "").padStart(64, "0");
       // balanceOf(address) (0x70a08231)
-      const balHex = await rpcCall(LP_TOKEN_ADDRESS, "0x70a08231" + paddedUser);
+      var balHex = await rpcCall(LP_TOKEN_ADDRESS, "0x70a08231" + paddedUser);
       if (balHex && balHex !== "0x0") {
         rawUserLp = Number(BigInt(balHex)) / 1e18;
         document.getElementById("userLpBal").textContent = rawUserLp.toFixed(4) + " LP";
@@ -459,24 +480,24 @@ function setPercent(pct) {
   if (!rawUserLp || rawUserLp <= 0) {
     return showStatus("No LP tokens detected in connected wallet.", "info");
   }
-  const amt = (rawUserLp * pct) / 100;
+  var amt = (rawUserLp * pct) / 100;
   document.getElementById("lockAmountInput").value = amt.toFixed(6);
 }
 
 function updateUnlockDatePreview() {
-  const days = parseInt(document.getElementById("durationSelect").value);
-  const future = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+  var days = parseInt(document.getElementById("durationSelect").value);
+  var future = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
   document.getElementById("unlockDatePreview").textContent = "➔ Unlocks on: " + future.toLocaleDateString() + " " + future.toLocaleTimeString();
 }
 
 async function deployLocker() {
-  const provider = getProvider();
+  var provider = getProvider();
   if (!userAccount) await connectWallet();
   if (!userAccount || !provider) return;
 
   try {
     showStatus("Please confirm contract deployment in MetaMask (~$0.02 Base gas)...", "info");
-    const txHash = await provider.request({
+    var txHash = await provider.request({
       method: "eth_sendTransaction",
       params: [{
         from: userAccount,
@@ -486,14 +507,14 @@ async function deployLocker() {
 
     showStatus("Locker deployment submitted! Tx: " + txHash.slice(0, 10) + "... Waiting for confirmation...", "info");
 
-    for (let i = 0; i < 30; i++) {
+    for (var i = 0; i < 30; i++) {
       await new Promise(function(r) { setTimeout(r, 2000); });
-      const res = await provider.request({
+      var res = await provider.request({
         method: "eth_getTransactionReceipt",
         params: [txHash]
       });
       if (res && res.contractAddress) {
-        const deployedAddr = res.contractAddress;
+        var deployedAddr = res.contractAddress;
         currentLockerAddress = deployedAddr;
         localStorage.setItem("frac_lp_locker_address", deployedAddr);
         document.getElementById("lockerAddressInput").value = deployedAddr;
@@ -508,7 +529,7 @@ async function deployLocker() {
 }
 
 async function connectLocker() {
-  const addr = document.getElementById("lockerAddressInput").value.trim();
+  var addr = document.getElementById("lockerAddressInput").value.trim();
   if (!/^0x[a-fA-F0-9]{40}$/.test(addr)) {
     return showStatus("Please enter a valid 0x locker contract address.", "error");
   }
@@ -521,23 +542,23 @@ async function connectLocker() {
 async function loadLocker(addr) {
   try {
     // lockCount() -> 0x9b10b6f5
-    const resHex = await rpcCall(addr, "0x9b10b6f5");
+    var resHex = await rpcCall(addr, "0x9b10b6f5");
     if (!resHex || resHex === "0x0") return;
-    const count = parseInt(resHex, 16);
+    var count = parseInt(resHex, 16);
 
     if (count > 0) {
       activeLockId = count;
       // getLock(uint256) -> 0xd68f4dd1
-      const lockIdHex = count.toString(16).padStart(64, "0");
-      const dataLock = await rpcCall(addr, "0xd68f4dd1" + lockIdHex);
+      var lockIdHex = count.toString(16).padStart(64, "0");
+      var dataLock = await rpcCall(addr, "0xd68f4dd1" + lockIdHex);
       if (!dataLock || dataLock === "0x0") return;
-      const rawHex = dataLock.replace("0x", "");
+      var rawHex = dataLock.replace("0x", "");
       
-      const token = "0x" + rawHex.slice(24, 64);
-      const beneficiary = "0x" + rawHex.slice(64 + 24, 128);
-      const amount = Number(BigInt("0x" + rawHex.slice(128, 192))) / 1e18;
-      const unlockTs = parseInt(rawHex.slice(320, 384), 16);
-      const isWithdrawn = parseInt(rawHex.slice(384, 448), 16) === 1;
+      var token = "0x" + rawHex.slice(24, 64);
+      var beneficiary = "0x" + rawHex.slice(64 + 24, 128);
+      var amount = Number(BigInt("0x" + rawHex.slice(128, 192))) / 1e18;
+      var unlockTs = parseInt(rawHex.slice(320, 384), 16);
+      var isWithdrawn = parseInt(rawHex.slice(384, 448), 16) === 1;
 
       displayActiveLock(addr, amount, unlockTs, beneficiary, isWithdrawn);
     }
@@ -547,15 +568,15 @@ async function loadLocker(addr) {
 }
 
 function displayActiveLock(lockerAddr, amount, unlockTs, beneficiary, isWithdrawn) {
-  const card = document.getElementById("activeLockCard");
+  var card = document.getElementById("activeLockCard");
   card.style.display = "block";
   document.getElementById("lockBasescanLink").href = "https://basescan.org/address/" + lockerAddr;
   document.getElementById("displayLockedAmt").textContent = amount.toFixed(4) + " LP";
   
-  const pct = rawTotalLp > 0 ? ((amount / rawTotalLp) * 100).toFixed(2) : "--";
+  var pct = rawTotalLp > 0 ? ((amount / rawTotalLp) * 100).toFixed(2) : "--";
   document.getElementById("displayLockedPercent").textContent = "(" + pct + "% of total Uniswap pool locked)";
 
-  const unlockDate = new Date(unlockTs * 1000);
+  var unlockDate = new Date(unlockTs * 1000);
   document.getElementById("displayUnlockDate").textContent = unlockDate.toLocaleDateString() + " " + unlockDate.toLocaleTimeString();
   document.getElementById("displayBeneficiary").textContent = "Beneficiary: " + beneficiary;
 
@@ -569,8 +590,8 @@ function displayActiveLock(lockerAddr, amount, unlockTs, beneficiary, isWithdraw
 }
 
 function updateCountdown(unlockTs) {
-  const now = Math.floor(Date.now() / 1000);
-  const diff = unlockTs - now;
+  var now = Math.floor(Date.now() / 1000);
+  var diff = unlockTs - now;
 
   if (diff <= 0) {
     document.getElementById("cdDays").textContent = "00";
@@ -581,10 +602,10 @@ function updateCountdown(unlockTs) {
     return;
   }
 
-  const days = Math.floor(diff / (24 * 3600));
-  const hours = Math.floor((diff % (24 * 3600)) / 3600);
-  const mins = Math.floor((diff % 3600) / 60);
-  const secs = diff % 60;
+  var days = Math.floor(diff / (24 * 3600));
+  var hours = Math.floor((diff % (24 * 3600)) / 3600);
+  var mins = Math.floor((diff % 3600) / 60);
+  var secs = diff % 60;
 
   document.getElementById("cdDays").textContent = String(days).padStart(2, '0');
   document.getElementById("cdHours").textContent = String(hours).padStart(2, '0');
@@ -593,19 +614,19 @@ function updateCountdown(unlockTs) {
 }
 
 async function approveLp() {
-  const provider = getProvider();
+  var provider = getProvider();
   if (!userAccount) await connectWallet();
   if (!currentLockerAddress) return showStatus("Deploy or connect a locker contract first!", "error");
-  const amtStr = document.getElementById("lockAmountInput").value;
+  var amtStr = document.getElementById("lockAmountInput").value;
   if (!amtStr || parseFloat(amtStr) <= 0) return showStatus("Enter a valid LP amount to lock.", "error");
 
   try {
     showStatus("Please confirm LP token approval in MetaMask...", "info");
-    const wei = BigInt(Math.floor(parseFloat(amtStr) * 1e18)).toString(16).padStart(64, "0");
-    const lockerPadded = currentLockerAddress.toLowerCase().replace("0x", "").padStart(64, "0");
-    const data = "0x095ea7b3" + lockerPadded + wei; // approve(address,uint256)
+    var wei = BigInt(Math.floor(parseFloat(amtStr) * 1e18)).toString(16).padStart(64, "0");
+    var lockerPadded = currentLockerAddress.toLowerCase().replace("0x", "").padStart(64, "0");
+    var data = "0x095ea7b3" + lockerPadded + wei; // approve(address,uint256)
 
-    const txHash = await provider.request({
+    var txHash = await provider.request({
       method: "eth_sendTransaction",
       params: [{ from: userAccount, to: LP_TOKEN_ADDRESS, data: data }]
     });
@@ -616,33 +637,33 @@ async function approveLp() {
 }
 
 async function executeLock() {
-  const provider = getProvider();
+  var provider = getProvider();
   if (!userAccount) await connectWallet();
   if (!currentLockerAddress) return showStatus("Deploy or connect a locker contract first!", "error");
 
-  const amtStr = document.getElementById("lockAmountInput").value;
+  var amtStr = document.getElementById("lockAmountInput").value;
   if (!amtStr || parseFloat(amtStr) <= 0) return showStatus("Enter a valid LP amount to lock.", "error");
 
-  const days = parseInt(document.getElementById("durationSelect").value);
-  const unlockTs = Math.floor(Date.now() / 1000) + days * 24 * 60 * 60;
+  var days = parseInt(document.getElementById("durationSelect").value);
+  var unlockTs = Math.floor(Date.now() / 1000) + days * 24 * 60 * 60;
 
-  let beneficiary = document.getElementById("beneficiaryInput").value.trim();
+  var beneficiary = document.getElementById("beneficiaryInput").value.trim();
   if (!beneficiary || !/^0x[a-fA-F0-9]{40}$/.test(beneficiary)) {
     beneficiary = userAccount;
   }
 
   try {
     showStatus("Please confirm Lock transaction in MetaMask...", "info");
-    const tokenPadded = LP_TOKEN_ADDRESS.toLowerCase().replace("0x", "").padStart(64, "0");
-    const amtHex = BigInt(Math.floor(parseFloat(amtStr) * 1e18)).toString(16).padStart(64, "0");
-    const tsHex = unlockTs.toString(16).padStart(64, "0");
-    const benPadded = beneficiary.toLowerCase().replace("0x", "").padStart(64, "0");
+    var tokenPadded = LP_TOKEN_ADDRESS.toLowerCase().replace("0x", "").padStart(64, "0");
+    var amtHex = BigInt(Math.floor(parseFloat(amtStr) * 1e18)).toString(16).padStart(64, "0");
+    var tsHex = unlockTs.toString(16).padStart(64, "0");
+    var benPadded = beneficiary.toLowerCase().replace("0x", "").padStart(64, "0");
 
     // lock(address,uint256,uint256,address) -> 0x0852c9ea
-    const selector = "0x0852c9ea";
-    const data = selector + tokenPadded + amtHex + tsHex + benPadded;
+    var selector = "0x0852c9ea";
+    var data = selector + tokenPadded + amtHex + tsHex + benPadded;
 
-    const txHash = await provider.request({
+    var txHash = await provider.request({
       method: "eth_sendTransaction",
       params: [{ from: userAccount, to: currentLockerAddress, data: data }]
     });
@@ -657,6 +678,8 @@ async function executeLock() {
 // Initial preview and load
 updateUnlockDatePreview();
 refreshLpStats();
+setInterval(refreshLpStats, 4000); // Auto-update pool and wallet stats every 4s
+
 if (currentLockerAddress) {
   document.getElementById("lockerAddressInput").value = currentLockerAddress;
   loadLocker(currentLockerAddress);
