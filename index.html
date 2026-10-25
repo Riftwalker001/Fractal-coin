@@ -636,45 +636,72 @@ function copyContractAddress() {
   });
 }
 
+function getProvider() {
+  if (window.ethereum) {
+    if (window.ethereum.providers && window.ethereum.providers.length) {
+      return window.ethereum.providers.find(p => p.isMetaMask) || window.ethereum.providers[0];
+    }
+    return window.ethereum;
+  }
+  return null;
+}
+
 async function connectWallet() {
-  if (!window.ethereum) {
-    showStatus("MetaMask or Web3 wallet not detected. Install MetaMask or paste your address below.", "error");
+  const provider = getProvider();
+  if (!provider) {
+    showStatus("MetaMask or Web3 wallet not detected. If running from local files (file://), open the live GitHub link or enable 'Allow access to file URLs' in extension settings.", "error");
     return;
   }
   try {
-    const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    const accounts = await provider.request({ method: "eth_requestAccounts" });
+    if (!accounts || accounts.length === 0) {
+      showStatus("No accounts found in wallet.", "error");
+      return;
+    }
     userAccount = accounts[0];
     
-    // Ensure Base Network (8453 / 0x2105)
-    const chainId = await window.ethereum.request({ method: "eth_chainId" });
-    if (chainId !== "0x2105") {
-      try {
-        await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0x2105" }]
-        });
-      } catch (switchError) {
-        if (switchError.code === 4902) {
-          await window.ethereum.request({
-            method: "wallet_addEthereumChain",
-            params: [{
-              chainId: "0x2105",
-              chainName: "Base Mainnet",
-              rpcUrls: ["https://mainnet.base.org"],
-              nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
-              blockExplorerUrls: ["https://basescan.org"]
-            }]
-          });
-        }
-      }
-    }
-
+    // Update UI immediately
     document.getElementById("connectBtn").textContent = userAccount.slice(0, 6) + "..." + userAccount.slice(-4);
     document.getElementById("userAddressLabel").textContent = userAccount;
-    showStatus("Connected to Base Mainnet!", "success");
+
+    // Ensure Base Network (8453 / 0x2105)
+    try {
+      const chainId = await provider.request({ method: "eth_chainId" });
+      if (parseInt(chainId, 16) !== 8453) {
+        try {
+          await provider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x2105" }]
+          });
+        } catch (switchError) {
+          if (switchError.code === 4902) {
+            await provider.request({
+              method: "wallet_addEthereumChain",
+              params: [{
+                chainId: "0x2105",
+                chainName: "Base Mainnet",
+                rpcUrls: ["https://mainnet.base.org"],
+                nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+                blockExplorerUrls: ["https://basescan.org"]
+              }]
+            });
+          }
+        }
+      }
+    } catch (chainErr) {
+      console.warn("Chain switch note:", chainErr);
+    }
+
+    showStatus("Connected to Base Mainnet: " + userAccount.slice(0, 8) + "...", "success");
     await refreshUser();
   } catch (e) {
-    showStatus(e.message || "Failed to connect wallet.", "error");
+    if (e.code === -32002) {
+      showStatus("Connection request already pending in MetaMask. Please click your extension icon to approve.", "info");
+    } else if (e.code === 4001) {
+      showStatus("Connection request was cancelled in wallet.", "info");
+    } else {
+      showStatus(e.message || "Failed to connect wallet.", "error");
+    }
   }
 }
 

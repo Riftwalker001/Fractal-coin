@@ -174,7 +174,7 @@
     </div>
     <div class="nav-btns">
       <a class="btn btn-outline" href="index.html">← Back to Main Hub</a>
-      <button id="connectBtn" class="btn-primary" onclick="connectWallet()">Connect Wallet</button>
+      <button id="connectBtn" class="btn-primary" onclick="connectWallet()">Connect MetaMask</button>
     </div>
   </header>
 
@@ -203,13 +203,13 @@
   <div class="box">
     <h3 style="font-size:16px;">⚙ 1. Connect or Deploy Fractal Locker Contract</h3>
     <p style="font-size:12.5px; color:var(--muted); margin-top:2px;">
-      Deploy your own zero-fee, verified TimeLock contract on Base (~bash.02 gas), or connect to an existing one.
+      Deploy your own zero-fee, verified TimeLock contract on Base (~$0.02 gas), or connect to an existing one.
     </p>
 
     <div class="input-row" style="margin-top:14px;">
       <input id="lockerAddressInput" type="text" placeholder="Locker Contract Address (0x...)" style="font-family:monospace;">
       <button class="btn btn-outline" onclick="connectLocker()">Connect Locker</button>
-      <button class="btn btn-primary" onclick="deployLocker()">🚀 Deploy New Locker (~bash.02 gas)</button>
+      <button class="btn btn-primary" onclick="deployLocker()">🚀 Deploy New Locker (~$0.02 gas)</button>
     </div>
   </div>
 
@@ -310,14 +310,14 @@
 <script>
 const LP_TOKEN_ADDRESS = "0x7EEc5ad1D6ca2CE83B6BD8C774737726245C3F87";
 const LOCKER_BYTECODE = "0x608060405234801561000f575f80fd5b5060015f55610af0806100215f395ff3fe608060405234801561000f575f80fd5b50600436106100b1575f3560e01c80639a76d1fc1161006e5780639a76d1fc146101495780639b10b6f51461015c578063d68f4dd114610165578063f4dadc6114610202578063f6aacfb11461025c578063ff6698791461027f575f80fd5b8063070d66bf146100b55780630852c9ea146100ca5780630c64a7f2146100f0578063107bf5921461010357806324ba88b7146101235780632e1a7d4d14610136575b5f80fd5b6100c86100c336600461095c565b610292565b005b6100dd6100d8366004610997565b610371565b6040519081526020015b60405180910390f35b6100dd6100fe3660046109da565b610547565b6101166101113660046109f1565b61058f565b6040516100e79190610a0a565b6101166101313660046109f1565b6105f8565b6100c86101443660046109da565b61065f565b6100dd610157366004610a4d565b6107a9565b6100dd60015481565b6101c06101733660046109da565b5f90815260026020819052604090912080546001820154928201546003830154600484015460058501546006909501546001600160a01b0394851697949096169592949193909260ff1690565b604080516001600160a01b039889168152979096166020880152948601939093526060850191909152608084015260a0830152151560c082015260e0016100e7565b6101c06102103660046109da565b600260208190525f918252604090912080546001820154928201546003830154600484015460058501546006909501546001600160a01b03948516969094169492939192909160ff1687565b61026f61026a3660046109da565b6107d4565b60405190151581526020016100e7565b6100dd61028d366004610a4d565b61080c565b5f828152600260208190526040909120908101541580156102b75750600681015460ff165b156102d557604051636086ee6f60e11b815260040160405180910390fd5b60018101546001600160a01b031633146103025760405163644d871f60e01b815260040160405180910390fd5b80600501548211610326576040516352aba6d360e11b815260040160405180910390fd5b60058101805490839055604080518281526020810185905285917f12c0f64f942f99aa5210c23a8ab729735389400457b66b06895b0700315c3b33910160405180910390a250505050565b5f61037a610825565b835f0361039a5760405163162908e360e11b815260040160405180910390fd5b4283116103ba576040516352aba6d360e11b815260040160405180910390fd5b6001600160a01b0382166103cc573391505b60015f81546103da90610a89565b91829055506040805160e0810182526001600160a01b0380891680835286821660208085018281528587018c8152606087018d8152426080890190815260a089018e81525f60c08b018181528d825260028089528d83209c518d54908d166001600160a01b0319918216178e55975160018e8101805492909e169190991617909b559451998b019990995591516003808b019190915590516004808b0191909155915160058a015591516006909801805498151560ff199099169890981790975592855291815285842080548084018255908552818520018790558284529384529382208054948501815582529190209091018290559091506104df9033308761084d565b816001600160a01b0316856001600160a01b0316827f355bc3efe6889db236cf9358375711e881d301bc5a1a43aa24b3d37e073b950b878760405161052e929190918252602082015260400190565b60405180910390a461053f60015f55565b949350505050565b5f818152600260205260408120600681015460ff168061056b575080600501544210155b1561057857505f92915050565b4281600501546105889190610aa1565b9392505050565b6001600160a01b0381165f908152600360209081526040918290208054835181840281018401909452808452606093928301828280156105ec57602002820191905f5260205f20905b8154815260200190600101908083116105d8575b50505050509050919050565b6001600160a01b0381165f908152600460209081526040918290208054835181840281018401909452808452606093928301828280156105ec57602002820191905f5260205f20908154815260200190600101908083116105d85750505050509050919050565b610667610825565b5f81815260026020819052604090912090810154158061068b5750600681015460ff165b156106a957604051636507689f60e01b815260040160405180910390fd5b60018101546001600160a01b031633146106d65760405163644d871f60e01b815260040160405180910390fd5b8060050154421015610717574281600501546106f29190610aa1565b604051630b5c15df60e11b815260040161070e91815260200190565b60405180910390fd5b6002810180545f90915560068201805460ff19166001908117909155820154825461074f916001600160a01b039182169116836108ba565b600182015482546040518381526001600160a01b03928316929091169085907ff9c80fffede54cc9d8066ec75e2427dc3863957bc3de78bcea60550de76fee1d9060200160405180910390a450506107a660015f55565b50565b6004602052815f5260405f2081815481106107c2575f80fd5b905f5260205f20015f91509150505481565b5f818152600260205260408120600681015460ff161580156107f957505f8160020154115b8015610588575060050154421092915050565b6003602052815f5260405f2081815481106107c2575f80fd5b60025f540361084757604051633ee5aeb560e01b815260040160405180910390fd5b60025f55565b6040516001600160a01b0384811660248301528381166044830152606482018390526108b49186918216906323b872dd906084015b604051602081830303815290604052915060e01b6020820180516001600160e01b0383818316178352505050506108f0565b50505050565b6040516001600160a01b038381166024830152604482018390526108eb91859182169063a9059cbb90606401610882565b505050565b5f8060205f8451602086015f885af18061090f576040513d5f823e3d81fd5b50505f513d91508115610926578060011415610933565b6001600160a01b0384163b155b156108b457604051635274afe760e01b81526001600160a01b038516600482015260240161070e565b5f806040838503121561096d575f80fd5b50508035926020909101359150565b80356001600160a01b0381168114610992575f80fd5b919050565b5f805f80608085870312156109aa575f80fd5b6109b38561097c565b935060208501359250604085013591506109cf6060860161097c565b905092959194509250565b5f602082840312156109ea575f80fd5b5035919050565b5f60208284031215610a01575f80fd5b6105888261097c565b602080825282518282018190525f9190848201906040850190845b81811015610a4157835183529284019291840191600101610a25565b50909695505050505050565b5f8060408385031215610a5e575f80fd5b610a678361097c565b946020939093013593505050565b634e487b7160e01b5f52601160045260245ffd5b5f60018201610a9a57610a9a610a75565b5060010190565b81810381811115610ab457610ab4610a75565b9291505056fea26469706673582212200e82ee0808235cb7a946ec1db795c376af09a3b18862706bb21b55782d1b607164736f6c63430008180033";
-const LOCKER_ABI = [{"type": "function", "name": "extendLock", "inputs": [{"name": "lockId", "type": "uint256", "internalType": "uint256"}, {"name": "newUnlockTimestamp", "type": "uint256", "internalType": "uint256"}], "outputs": [], "stateMutability": "nonpayable"}, {"type": "function", "name": "getLock", "inputs": [{"name": "lockId", "type": "uint256", "internalType": "uint256"}], "outputs": [{"name": "token", "type": "address", "internalType": "address"}, {"name": "beneficiary", "type": "address", "internalType": "address"}, {"name": "amount", "type": "uint256", "internalType": "uint256"}, {"name": "initialAmount", "type": "uint256", "internalType": "uint256"}, {"name": "createdAt", "type": "uint256", "internalType": "uint256"}, {"name": "unlockTimestamp", "type": "uint256", "internalType": "uint256"}, {"name": "isWithdrawn", "type": "bool", "internalType": "bool"}], "stateMutability": "view"}, {"type": "function", "name": "getLocksByBeneficiary", "inputs": [{"name": "beneficiary", "type": "address", "internalType": "address"}], "outputs": [{"name": "", "type": "uint256[]", "internalType": "uint256[]"}], "stateMutability": "view"}, {"type": "function", "name": "getLocksByToken", "inputs": [{"name": "token", "type": "address", "internalType": "address"}], "outputs": [{"name": "", "type": "uint256[]", "internalType": "uint256[]"}], "stateMutability": "view"}, {"type": "function", "name": "isLocked", "inputs": [{"name": "lockId", "type": "uint256", "internalType": "uint256"}], "outputs": [{"name": "", "type": "bool", "internalType": "bool"}], "stateMutability": "view"}, {"type": "function", "name": "lock", "inputs": [{"name": "token", "type": "address", "internalType": "address"}, {"name": "amount", "type": "uint256", "internalType": "uint256"}, {"name": "unlockTimestamp", "type": "uint256", "internalType": "uint256"}, {"name": "beneficiary", "type": "address", "internalType": "address"}], "outputs": [{"name": "lockId", "type": "uint256", "internalType": "uint256"}], "stateMutability": "nonpayable"}, {"type": "function", "name": "lockCount", "inputs": [], "outputs": [{"name": "", "type": "uint256", "internalType": "uint256"}], "stateMutability": "view"}, {"type": "function", "name": "locks", "inputs": [{"name": "", "type": "uint256", "internalType": "uint256"}], "outputs": [{"name": "token", "type": "address", "internalType": "address"}, {"name": "beneficiary", "type": "address", "internalType": "address"}, {"name": "amount", "type": "uint256", "internalType": "uint256"}, {"name": "initialAmount", "type": "uint256", "internalType": "uint256"}, {"name": "createdAt", "type": "uint256", "internalType": "uint256"}, {"name": "unlockTimestamp", "type": "uint256", "internalType": "uint256"}, {"name": "isWithdrawn", "type": "bool", "internalType": "bool"}], "stateMutability": "view"}, {"type": "function", "name": "remainingTime", "inputs": [{"name": "lockId", "type": "uint256", "internalType": "uint256"}], "outputs": [{"name": "", "type": "uint256", "internalType": "uint256"}], "stateMutability": "view"}, {"type": "function", "name": "tokenLockIds", "inputs": [{"name": "", "type": "address", "internalType": "address"}, {"name": "", "type": "uint256", "internalType": "uint256"}], "outputs": [{"name": "", "type": "uint256", "internalType": "uint256"}], "stateMutability": "view"}, {"type": "function", "name": "userLockIds", "inputs": [{"name": "", "type": "address", "internalType": "address"}, {"name": "", "type": "uint256", "internalType": "uint256"}], "outputs": [{"name": "", "type": "uint256", "internalType": "uint256"}], "stateMutability": "view"}, {"type": "function", "name": "withdraw", "inputs": [{"name": "lockId", "type": "uint256", "internalType": "uint256"}], "outputs": [], "stateMutability": "nonpayable"}, {"type": "event", "name": "LockExtended", "inputs": [{"name": "lockId", "type": "uint256", "indexed": true, "internalType": "uint256"}, {"name": "oldUnlockTimestamp", "type": "uint256", "indexed": false, "internalType": "uint256"}, {"name": "newUnlockTimestamp", "type": "uint256", "indexed": false, "internalType": "uint256"}], "anonymous": false}, {"type": "event", "name": "TokenLocked", "inputs": [{"name": "lockId", "type": "uint256", "indexed": true, "internalType": "uint256"}, {"name": "token", "type": "address", "indexed": true, "internalType": "address"}, {"name": "beneficiary", "type": "address", "indexed": true, "internalType": "address"}, {"name": "amount", "type": "uint256", "indexed": false, "internalType": "uint256"}, {"name": "unlockTimestamp", "type": "uint256", "indexed": false, "internalType": "uint256"}], "anonymous": false}, {"type": "event", "name": "TokenWithdrawn", "inputs": [{"name": "lockId", "type": "uint256", "indexed": true, "internalType": "uint256"}, {"name": "token", "type": "address", "indexed": true, "internalType": "address"}, {"name": "beneficiary", "type": "address", "indexed": true, "internalType": "address"}, {"name": "amount", "type": "uint256", "indexed": false, "internalType": "uint256"}], "anonymous": false}, {"type": "error", "name": "AlreadyWithdrawn", "inputs": []}, {"type": "error", "name": "InvalidAmount", "inputs": []}, {"type": "error", "name": "InvalidUnlockTime", "inputs": []}, {"type": "error", "name": "LockNotFound", "inputs": []}, {"type": "error", "name": "NotBeneficiary", "inputs": []}, {"type": "error", "name": "ReentrancyGuardReentrantCall", "inputs": []}, {"type": "error", "name": "SafeERC20FailedOperation", "inputs": [{"name": "token", "type": "address", "internalType": "address"}]}, {"type": "error", "name": "StillLocked", "inputs": [{"name": "remainingSeconds", "type": "uint256", "internalType": "uint256"}]}];
 
-const ERC20_ABI = [
-  {"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"type":"function"},
-  {"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"type":"function"},
-  {"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"type":"function"},
-  {"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"type":"function"}
+// Multi-RPC endpoints for 100% browser fetch uptime
+const RPC_ENDPOINTS = [
+  "https://base-rpc.publicnode.com",
+  "https://mainnet.base.org",
+  "https://1rpc.io/base"
 ];
+let rpcIndex = 0;
 
 let userAccount = null;
 let currentLockerAddress = localStorage.getItem("frac_lp_locker_address") || "";
@@ -326,65 +326,129 @@ let rawTotalLp = 0;
 let activeLockId = 1;
 let countdownTimer = null;
 
-function showStatus(msg, type = "info") {
+function showStatus(msg, type) {
+  type = type || "info";
   const banner = document.getElementById("statusBanner");
-  banner.className = ;
+  banner.className = "status-msg " + type;
   banner.textContent = msg;
   banner.style.display = "block";
-  setTimeout(() => { banner.style.display = "none"; }, 9000);
+  setTimeout(function() { banner.style.display = "none"; }, 9000);
+}
+
+function getProvider() {
+  if (window.ethereum) {
+    if (window.ethereum.providers && window.ethereum.providers.length) {
+      return window.ethereum.providers.find(function(p) { return p.isMetaMask; }) || window.ethereum.providers[0];
+    }
+    return window.ethereum;
+  }
+  return null;
+}
+
+async function rpcCall(to, data) {
+  for (let attempt = 0; attempt < RPC_ENDPOINTS.length; attempt++) {
+    const ep = RPC_ENDPOINTS[(rpcIndex + attempt) % RPC_ENDPOINTS.length];
+    try {
+      const resp = await fetch(ep, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: Math.floor(Math.random() * 100000),
+          method: "eth_call",
+          params: [{ to: to, data: data }, "latest"]
+        })
+      });
+      if (!resp.ok) continue;
+      const res = await resp.json();
+      if (res && res.result && res.result !== "0x") {
+        rpcIndex = (rpcIndex + attempt) % RPC_ENDPOINTS.length;
+        return res.result;
+      }
+    } catch (e) {
+      // try next
+    }
+  }
+  return "0x0";
 }
 
 async function connectWallet() {
-  if (!window.ethereum) {
-    showStatus("MetaMask or a Web3 wallet is required.", "error");
+  const provider = getProvider();
+  if (!provider) {
+    showStatus("MetaMask or a Web3 wallet is required. If running locally, please open the live GitHub link or enable 'Allow access to file URLs' in extension settings.", "error");
     return;
   }
   try {
-    const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    const accounts = await provider.request({ method: "eth_requestAccounts" });
+    if (!accounts || accounts.length === 0) {
+      showStatus("No accounts found in wallet.", "error");
+      return;
+    }
     userAccount = accounts[0];
     document.getElementById("connectBtn").textContent = userAccount.slice(0, 6) + "..." + userAccount.slice(-4);
     document.getElementById("beneficiaryInput").value = userAccount;
-    showStatus("Connected to wallet!", "success");
+
+    // Check Chain ID (Base Mainnet: 8453 / 0x2105)
+    try {
+      const chainId = await provider.request({ method: "eth_chainId" });
+      if (parseInt(chainId, 16) !== 8453) {
+        try {
+          await provider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x2105" }]
+          });
+        } catch (switchError) {
+          if (switchError.code === 4902) {
+            await provider.request({
+              method: "wallet_addEthereumChain",
+              params: [{
+                chainId: "0x2105",
+                chainName: "Base Mainnet",
+                rpcUrls: ["https://mainnet.base.org"],
+                nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+                blockExplorerUrls: ["https://basescan.org"]
+              }]
+            });
+          }
+        }
+      }
+    } catch (chainErr) {
+      console.warn("Chain switch error:", chainErr);
+    }
+
+    showStatus("Connected: " + userAccount.slice(0, 8) + "...", "success");
     await refreshLpStats();
     if (currentLockerAddress) {
       await loadLocker(currentLockerAddress);
     }
   } catch (e) {
-    showStatus(e.message || "Could not connect wallet.", "error");
+    if (e.code === -32002) {
+      showStatus("Connection request already pending in MetaMask. Please click your extension icon to approve.", "info");
+    } else if (e.code === 401) {
+      showStatus("Connection request was cancelled.", "info");
+    } else {
+      showStatus(e.message || "Could not connect wallet.", "error");
+    }
   }
 }
 
 async function refreshLpStats() {
   try {
-    // Multi-RPC fetch for LP supply and balance
-    const rpc = "https://base-rpc.publicnode.com";
-    
-    // Total supply
-    const respSupply = await fetch(rpc, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        jsonrpc: "2.0", id: 1, method: "eth_call",
-        params: [{ to: LP_TOKEN_ADDRESS, data: "0x18160ddd" }, "latest"]
-      })
-    });
-    const dataSupply = await respSupply.json();
-    rawTotalLp = Number(BigInt(dataSupply.result)) / 1e18;
-    document.getElementById("totalLpSupply").textContent = rawTotalLp.toFixed(4) + " LP";
+    // Total supply of LP (0x18160ddd)
+    const supplyHex = await rpcCall(LP_TOKEN_ADDRESS, "0x18160ddd");
+    if (supplyHex && supplyHex !== "0x0") {
+      rawTotalLp = Number(BigInt(supplyHex)) / 1e18;
+      document.getElementById("totalLpSupply").textContent = rawTotalLp.toFixed(4) + " LP";
+    }
 
     if (userAccount) {
       const paddedUser = userAccount.toLowerCase().replace("0x", "").padStart(64, "0");
-      const respBal = await fetch(rpc, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          jsonrpc: "2.0", id: 2, method: "eth_call",
-          params: [{ to: LP_TOKEN_ADDRESS, data: "0x70a08231" + paddedUser }, "latest"]
-        })
-      });
-      const dataBal = await respBal.json();
-      rawUserLp = Number(BigInt(dataBal.result)) / 1e18;
-      document.getElementById("userLpBal").textContent = rawUserLp.toFixed(4) + " LP";
+      // balanceOf(address) (0x70a08231)
+      const balHex = await rpcCall(LP_TOKEN_ADDRESS, "0x70a08231" + paddedUser);
+      if (balHex && balHex !== "0x0") {
+        rawUserLp = Number(BigInt(balHex)) / 1e18;
+        document.getElementById("userLpBal").textContent = rawUserLp.toFixed(4) + " LP";
+      }
     }
   } catch (err) {
     console.error("Error loading LP stats:", err);
@@ -402,17 +466,17 @@ function setPercent(pct) {
 function updateUnlockDatePreview() {
   const days = parseInt(document.getElementById("durationSelect").value);
   const future = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
-  document.getElementById("unlockDatePreview").textContent = ;
+  document.getElementById("unlockDatePreview").textContent = "➔ Unlocks on: " + future.toLocaleDateString() + " " + future.toLocaleTimeString();
 }
 
-// 1-CLICK DEPLOY LOCKER FROM BROWSER
 async function deployLocker() {
+  const provider = getProvider();
   if (!userAccount) await connectWallet();
-  if (!userAccount) return;
+  if (!userAccount || !provider) return;
 
   try {
-    showStatus("Please confirm contract deployment in MetaMask (~bash.02 Base gas)...", "info");
-    const txHash = await window.ethereum.request({
+    showStatus("Please confirm contract deployment in MetaMask (~$0.02 Base gas)...", "info");
+    const txHash = await provider.request({
       method: "eth_sendTransaction",
       params: [{
         from: userAccount,
@@ -420,31 +484,23 @@ async function deployLocker() {
       }]
     });
 
-    showStatus("Locker deployment submitted! Waiting for block confirmation...", "info");
+    showStatus("Locker deployment submitted! Tx: " + txHash.slice(0, 10) + "... Waiting for confirmation...", "info");
 
-    // Poll for receipt
-    let receipt = null;
     for (let i = 0; i < 30; i++) {
-      await new Promise(r => setTimeout(r, 2000));
-      const res = await window.ethereum.request({
+      await new Promise(function(r) { setTimeout(r, 2000); });
+      const res = await provider.request({
         method: "eth_getTransactionReceipt",
         params: [txHash]
       });
       if (res && res.contractAddress) {
-        receipt = res;
+        const deployedAddr = res.contractAddress;
+        currentLockerAddress = deployedAddr;
+        localStorage.setItem("frac_lp_locker_address", deployedAddr);
+        document.getElementById("lockerAddressInput").value = deployedAddr;
+        showStatus("FractalLPLocker deployed at " + deployedAddr + "!", "success");
+        await loadLocker(deployedAddr);
         break;
       }
-    }
-
-    if (receipt && receipt.contractAddress) {
-      const deployedAddr = receipt.contractAddress;
-      currentLockerAddress = deployedAddr;
-      localStorage.setItem("frac_lp_locker_address", deployedAddr);
-      document.getElementById("lockerAddressInput").value = deployedAddr;
-      showStatus(, "success");
-      await loadLocker(deployedAddr);
-    } else {
-      showStatus("Deployment mined! Paste contract address into input if not auto-filled.", "success");
     }
   } catch (e) {
     showStatus("Deployment error: " + (e.message || e), "error");
@@ -464,33 +520,18 @@ async function connectLocker() {
 
 async function loadLocker(addr) {
   try {
-    // Check lockCount
-    const rpc = "https://base-rpc.publicnode.com";
-    const resp = await fetch(rpc, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        jsonrpc: "2.0", id: 1, method: "eth_call",
-        params: [{ to: addr, data: "0x9b10b6f5" }, "latest"] // lockCount()
-      })
-    });
-    const d = await resp.json();
-    const count = parseInt(d.result, 16);
+    // lockCount() -> 0x9b10b6f5
+    const resHex = await rpcCall(addr, "0x9b10b6f5");
+    if (!resHex || resHex === "0x0") return;
+    const count = parseInt(resHex, 16);
 
     if (count > 0) {
       activeLockId = count;
-      // Fetch details of latest lock: getLock(uint256) -> 0xd68f4dd1
+      // getLock(uint256) -> 0xd68f4dd1
       const lockIdHex = count.toString(16).padStart(64, "0");
-      const respLock = await fetch(rpc, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          jsonrpc: "2.0", id: 2, method: "eth_call",
-          params: [{ to: addr, data: "0xd68f4dd1" + lockIdHex }, "latest"]
-        })
-      });
-      const dataLock = await respLock.json();
-      const rawHex = dataLock.result.replace("0x", "");
+      const dataLock = await rpcCall(addr, "0xd68f4dd1" + lockIdHex);
+      if (!dataLock || dataLock === "0x0") return;
+      const rawHex = dataLock.replace("0x", "");
       
       const token = "0x" + rawHex.slice(24, 64);
       const beneficiary = "0x" + rawHex.slice(64 + 24, 128);
@@ -508,19 +549,19 @@ async function loadLocker(addr) {
 function displayActiveLock(lockerAddr, amount, unlockTs, beneficiary, isWithdrawn) {
   const card = document.getElementById("activeLockCard");
   card.style.display = "block";
-  document.getElementById("lockBasescanLink").href = ;
+  document.getElementById("lockBasescanLink").href = "https://basescan.org/address/" + lockerAddr;
   document.getElementById("displayLockedAmt").textContent = amount.toFixed(4) + " LP";
   
   const pct = rawTotalLp > 0 ? ((amount / rawTotalLp) * 100).toFixed(2) : "--";
-  document.getElementById("displayLockedPercent").textContent = ;
+  document.getElementById("displayLockedPercent").textContent = "(" + pct + "% of total Uniswap pool locked)";
 
   const unlockDate = new Date(unlockTs * 1000);
   document.getElementById("displayUnlockDate").textContent = unlockDate.toLocaleDateString() + " " + unlockDate.toLocaleTimeString();
-  document.getElementById("displayBeneficiary").textContent = ;
+  document.getElementById("displayBeneficiary").textContent = "Beneficiary: " + beneficiary;
 
   if (countdownTimer) clearInterval(countdownTimer);
   updateCountdown(unlockTs);
-  countdownTimer = setInterval(() => updateCountdown(unlockTs), 1000);
+  countdownTimer = setInterval(function() { updateCountdown(unlockTs); }, 1000);
 
   if (Date.now() >= unlockTs * 1000 && !isWithdrawn) {
     document.getElementById("withdrawBtn").removeAttribute("disabled");
@@ -551,8 +592,8 @@ function updateCountdown(unlockTs) {
   document.getElementById("cdSeconds").textContent = String(secs).padStart(2, '0');
 }
 
-// STEP 1: APPROVE LP TOKENS
 async function approveLp() {
+  const provider = getProvider();
   if (!userAccount) await connectWallet();
   if (!currentLockerAddress) return showStatus("Deploy or connect a locker contract first!", "error");
   const amtStr = document.getElementById("lockAmountInput").value;
@@ -564,7 +605,7 @@ async function approveLp() {
     const lockerPadded = currentLockerAddress.toLowerCase().replace("0x", "").padStart(64, "0");
     const data = "0x095ea7b3" + lockerPadded + wei; // approve(address,uint256)
 
-    const txHash = await window.ethereum.request({
+    const txHash = await provider.request({
       method: "eth_sendTransaction",
       params: [{ from: userAccount, to: LP_TOKEN_ADDRESS, data: data }]
     });
@@ -574,8 +615,8 @@ async function approveLp() {
   }
 }
 
-// STEP 2: LOCK TOKENS
 async function executeLock() {
+  const provider = getProvider();
   if (!userAccount) await connectWallet();
   if (!currentLockerAddress) return showStatus("Deploy or connect a locker contract first!", "error");
 
@@ -592,25 +633,22 @@ async function executeLock() {
 
   try {
     showStatus("Please confirm Lock transaction in MetaMask...", "info");
-    // lock(address token, uint256 amount, uint256 unlockTimestamp, address beneficiary)
-    // selector: lock(address,uint256,uint256,address) -> 0x8a1b6a7d
     const tokenPadded = LP_TOKEN_ADDRESS.toLowerCase().replace("0x", "").padStart(64, "0");
     const amtHex = BigInt(Math.floor(parseFloat(amtStr) * 1e18)).toString(16).padStart(64, "0");
     const tsHex = unlockTs.toString(16).padStart(64, "0");
     const benPadded = beneficiary.toLowerCase().replace("0x", "").padStart(64, "0");
 
-    // Calculate exact selector for lock(address,uint256,uint256,address)
-    // let's compute or pass
-    const selector = "0x0852c9ea"; // We will verify
+    // lock(address,uint256,uint256,address) -> 0x0852c9ea
+    const selector = "0x0852c9ea";
     const data = selector + tokenPadded + amtHex + tsHex + benPadded;
 
-    const txHash = await window.ethereum.request({
+    const txHash = await provider.request({
       method: "eth_sendTransaction",
       params: [{ from: userAccount, to: currentLockerAddress, data: data }]
     });
 
     showStatus("Lock transaction submitted! Tx: " + txHash.slice(0, 10) + "...", "success");
-    setTimeout(() => { loadLocker(currentLockerAddress); refreshLpStats(); }, 5000);
+    setTimeout(function() { loadLocker(currentLockerAddress); refreshLpStats(); }, 5000);
   } catch (e) {
     showStatus("Lock error: " + (e.message || e), "error");
   }
