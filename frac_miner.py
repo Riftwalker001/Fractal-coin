@@ -367,7 +367,7 @@ def mine_loop(
                     elapsed = max(time.time() - t0, 0.001)
                     rate = (nonce - start_nonce + 1) / elapsed
                     is_golden = (digest[-1] & 0x3F) == 0x3F
-                    golden_tag = " \033[93m*** FRACTAL GOLDEN BLOCK HIT! (JACKPOT WON!) ***\033[0m" if is_golden else ""
+                    golden_tag = " \033[93m*** FRACTAL GOLDEN BLOCK HIT! (JACKPOT WON LUCKY FUCKER!!!) ***\033[0m" if is_golden else ""
                     print(
                         f"  [+] Valid PoW found! Nonce={nonce} | Attempts={nonce - start_nonce + 1} "
                         f"({elapsed:.2f}s, {rate:.0f} seq-chains/s){golden_tag}",
